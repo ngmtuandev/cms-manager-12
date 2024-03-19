@@ -1,12 +1,13 @@
 const path = {
-  HOME: "/",
-  HOME2: '/home',
+  STATISTICAL: "",
+  STATISTICAL_ORDER: 'static/order',
+  STATISTICAL_RECEIPT: 'static/receipt',
   SIGN_IN: "/signin",
-  SIGN_UP: "/signup",
-  PRODUCTS: "/products",
-  PRODUCT_DETAIL: "/products/:id",
-  USER_DETAIL: "/profile",
-  USER_CART: "/cart",
+  PRODUCTS: "/static/products",
+  USER: "user",
+  ORDER: "order",
+  DISCOUNT: "discount",
+  RECEIPT: "receipt",
 }
 
 export default path
