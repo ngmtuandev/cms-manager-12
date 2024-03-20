@@ -30,6 +30,11 @@ export default function Manager() {
     }
   },[token])
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate(path.SIGN_IN)
+  }
+ 
   return (
     <div className="w-full h-lvh">
       <Layout className="h-full">
@@ -129,7 +134,7 @@ export default function Manager() {
               <div className="font-bold text-md cursor-pointer mr-4">
                 Khanh Nguyễn
               </div>
-              <div className=" font-bold text-md cursor-pointer hover:text-blue-400">LogOut</div>
+              <div className=" font-bold text-md cursor-pointer hover:text-blue-400" onClick={handleLogout}>LogOut</div>
             </div>
           </Header>
           <Content

@@ -31,9 +31,9 @@ axiosClient.interceptors.response.use(
       localStorage.removeItem("token");
     }
 
-    if (response.data.message === "Forbidden") {
-      localStorage.removeItem("token");
-    }
+    // if (response.data.message === "Forbidden") {
+    //   localStorage.removeItem("token");
+    // }
 
     return Promise.reject(error);
   }

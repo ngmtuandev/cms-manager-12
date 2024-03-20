@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Space, Table, Tag } from "antd";
+import { Button, Modal, Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
-import { getUsers } from "../../apis/UserApis";
+import { deleteUser, getUsers } from "../../apis/UserApis";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import ModalAddUser from "./ModalAddUser";
+import { ShowNotification } from "../../helpers/ShowNotification";
+import moment from "moment";
 
 interface DataType {
   id: string;
@@ -16,6 +19,8 @@ interface DataType {
 
 const User = () => {
   const [data, setData] = useState<DataType[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [changeFlag, setChangeFlag] = useState<boolean>(false)
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Tên",
@@ -54,8 +59,8 @@ const User = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined className="text-xl cursor-pointer hover:text-blue-500"/>
-          <DeleteOutlined className="text-xl cursor-pointer hover:text-blue-500" />
+          <EditOutlined className="text-xl cursor-pointer hover:text-blue-500" />
+          <DeleteOutlined onClick={() => {handleDelete(record.id)}} className="text-xl cursor-pointer hover:text-blue-500" />
         </Space>
       ),
     },
@@ -67,16 +72,49 @@ const User = () => {
       if (response) {
         const modifiedData = response.map((item: DataType) => ({
           ...item,
+          createdAt: moment(item.createdAt).format("DD-MM-YYYY"),
           key: item.id, // Setting the key to the id returned from the backend
         }));
         setData(modifiedData);
       }
     })();
-  }, []);
+  }, [changeFlag]);
+
+  const handleOpen = () => {
+    setIsOpen(true);
+  }
+
+  const handleDelete = async (id:string) => {
+    try {
+      const response = await deleteUser(id)
+      if(response) {
+        setChangeFlag(!changeFlag)
+        ShowNotification({
+          message: "Thành công",
+          description: "Xóa người dùng thành công",
+          type: "success"
+        })
+      }
+    } catch (error:any) {
+      ShowNotification({
+        message: "Lỗi",
+        description: error.response.data.message,
+        type: "error"
+      })
+    }
+  }
 
   return (
     <div>
+      <div className="w-full mb-6 flex justify-end">
+        <div>
+          <Button className="bg-blue-500 text-white font-medium" onClick={handleOpen}>
+            Thêm người dùng
+          </Button>
+        </div>
+      </div>
       <Table columns={columns} dataSource={data} />
+      <ModalAddUser isOpen={isOpen} setIsOpen={setIsOpen} changeFlag={changeFlag} setChangeFlag={setChangeFlag} title="Thêm người dùng"/>
     </div>
   );
 };

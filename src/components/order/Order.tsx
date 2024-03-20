@@ -6,6 +6,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import { Button } from "antd/es/radio";
 import ColumnGroup from "antd/es/table/ColumnGroup";
 import Column from "antd/es/table/Column";
+import { getFormatPrice } from "../../utils/formatPrice";
 
 interface DataType {
   id: number;
@@ -17,7 +18,7 @@ interface DataType {
 const Order = () => {
   const [data, setData] = useState<DataType[]>([]);
   const [openUser, setOpenUser] = useState(false);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<any>();
   const [openOrderDetail, setOpenOrderDetail] = useState(false);
   const [orderDetail, setOrderDetail] = useState<any[]>();
   const columns: TableProps<DataType>["columns"] = [
@@ -93,7 +94,6 @@ const Order = () => {
   };
 
   const HandleShowDetailOrder = (value: any) => {
-    console.log(value);
     setOrderDetail(value);
   };
 
@@ -138,19 +138,47 @@ const Order = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={""}
-        className="max-h-[27rem] overflow-auto"
+        className="max-h-[28rem] overflow-auto"
       >
         {orderDetail &&
           orderDetail?.length > 0 &&
           orderDetail?.map((product: any, index: number) => (
             <Card
+              key={index}
               title={product.productOption.Product.name}
               bordered={false}
               className="shadow-lg w-full my-4 bg-slate-50 mx-2"
-              >
-              <p>Card content</p>
-              <p>Card content</p>
-              <p>Card content</p>
+            >
+              <div className="flex items-center">
+                <div className="w-1/2">
+                  <p className="text-md font-medium">
+                    Loại sản phẩm:{" "}
+                    <span className="font-normal text-slate-400">
+                      {product.productOption.Color.color} /{" "}
+                      {product.productOption.Size.name}
+                    </span>
+                  </p>
+                  <p className="text-md font-medium">
+                    Số lượng:{" "}
+                    <span className="font-normal text-slate-400">
+                      {product.quantity}
+                    </span>
+                  </p>
+                  <p className="text-md font-medium">
+                    Giá:{" "}
+                    <span className="font-normal text-slate-400">
+                      {getFormatPrice(product.productOption.Product.price)}
+                    </span>
+                  </p>
+                </div>
+                <div className="w-1/2 flex justify-center">
+                  <img
+                    className="w-[6rem] rounded-md shadow-lg"
+                    src={product.productOption.Product.mainImage}
+                    alt="hình ảnh sản phẩm"
+                  />
+                </div>
+              </div>
             </Card>
           ))}
       </Modal>

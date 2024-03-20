@@ -3,7 +3,25 @@ import { SigUpReq, SignRes } from "../types/TAuth";
 
 const signIn = async (data: SignRes) => {
   try {
-    const response = await axiosClient.post("/auth/local/signin", data);
+    const response = await axiosClient.post("/auth/local/admin/signin", data);
+    return response; // Return data if needed
+  } catch (error) {
+    throw error; // Rethrow error or handle it accordingly
+  }
+};
+
+const addUser = async (data: any) => {
+  try {
+    const response = await axiosClient.post("/auth/local/admin/signup", data);
+    return response; // Return data if needed
+  } catch (error) {
+    throw error; // Rethrow error or handle it accordingly
+  }
+};
+
+const deleteUser = async (id: string) => {
+  try {
+    const response = await axiosClient.delete(`/users/${id}`);
     return response; // Return data if needed
   } catch (error) {
     throw error; // Rethrow error or handle it accordingly
@@ -28,4 +46,4 @@ const getUsers = async () => {
   }
 };
 
-export { signIn, logout, getUsers};
+export { signIn, logout, getUsers, addUser, deleteUser};

@@ -1,6 +1,7 @@
 import { Button, Checkbox, Form, type FormProps, Input } from "antd";
 import { signIn } from "../apis/UserApis";
 import { useNavigate } from "react-router-dom";
+import { ShowNotification } from "../helpers/ShowNotification";
 type FieldType = {
   email?: string;
   password?: string;
@@ -15,7 +16,14 @@ const LoginPage = () => {
         localStorage.setItem("token", JSON.stringify(response));
         navigate("/");
       }
-    } catch (error) {
+    } catch (error:any) {
+      if(error.response.data.statusCode === 403) {
+        ShowNotification({
+          message: "Thất bại",
+          description: error.response.data.message,
+          type: "error",
+        })
+      }
       console.log(error);
     }
   };
