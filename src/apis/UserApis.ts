@@ -28,6 +28,15 @@ const deleteUser = async (id: string) => {
   }
 };
 
+const updateUser = async (id: string, data:any) => {
+  try {
+    const response = await axiosClient.put(`/users/${id}`,data);
+    return response; // Return data if needed
+  } catch (error) {
+    throw error; // Rethrow error or handle it accordingly
+  }
+};
+
 const logout = async () => {
   try {
     const response = await axiosClient.post("/auth/logout");
@@ -46,4 +55,4 @@ const getUsers = async () => {
   }
 };
 
-export { signIn, logout, getUsers, addUser, deleteUser};
+export { signIn, logout, getUsers, addUser, deleteUser, updateUser};

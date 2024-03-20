@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Card, Modal, Space, Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import { getOrders } from "../../apis/OrderApis";
-import { EyeOutlined } from "@ant-design/icons";
-import { Button } from "antd/es/radio";
-import ColumnGroup from "antd/es/table/ColumnGroup";
-import Column from "antd/es/table/Column";
 import { getFormatPrice } from "../../utils/formatPrice";
 
 interface DataType {

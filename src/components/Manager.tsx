@@ -22,19 +22,19 @@ export default function Manager() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if(!token) {
-      navigate(path.SIGN_IN)
+    if (!token) {
+      navigate(path.SIGN_IN);
     }
-  },[token])
+  }, [token]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate(path.SIGN_IN)
-  }
- 
+    localStorage.removeItem("token");
+    navigate(path.SIGN_IN);
+  };
+
   return (
     <div className="w-full h-lvh">
       <Layout className="h-full">
@@ -62,7 +62,7 @@ export default function Manager() {
                 label: "Thống kê",
                 children: [
                   {
-                    key:  path.STATISTICAL,
+                    key: path.STATISTICAL,
                     label: "Thống kê",
                   },
                   {
@@ -95,6 +95,16 @@ export default function Manager() {
                 key: path.RECEIPT,
                 icon: <CopyOutlined />,
                 label: "Quản lý nhập hàng",
+                children: [
+                  {
+                    key: path.RECEIPT,
+                    label: "Đơn hàng",
+                  },
+                  {
+                    key: path.RECEIPT_ADD,
+                    label: "Nhập hàng",
+                  },
+                ],
               },
               {
                 key: path.DISCOUNT,
@@ -134,7 +144,12 @@ export default function Manager() {
               <div className="font-bold text-md cursor-pointer mr-4">
                 Khanh Nguyễn
               </div>
-              <div className=" font-bold text-md cursor-pointer hover:text-blue-400" onClick={handleLogout}>LogOut</div>
+              <div
+                className=" font-bold text-md cursor-pointer hover:text-blue-400"
+                onClick={handleLogout}
+              >
+                LogOut
+              </div>
             </div>
           </Header>
           <Content
@@ -147,7 +162,7 @@ export default function Manager() {
             }}
           >
             {/* render component */}
-            <AppRoutes /> 
+            <AppRoutes />
           </Content>
         </Layout>
       </Layout>

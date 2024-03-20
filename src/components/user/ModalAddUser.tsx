@@ -2,8 +2,8 @@ import { Modal, Select } from "antd";
 
 import { Button, Checkbox, Form, type FormProps, Input } from "antd";
 import { Option } from "antd/es/mentions";
-import React from "react";
-import { addUser } from "../../apis/UserApis";
+import React, { useEffect } from "react";
+import { addUser, updateUser } from "../../apis/UserApis";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
@@ -14,7 +14,7 @@ type FieldType = {
   email?: string;
   phone?: string;
   password?: string;
-  role: string;
+  role?: string;
 };
 
 interface ModalAddUserProps {
@@ -24,6 +24,7 @@ interface ModalAddUserProps {
   setChangeFlag: any;
   title: string;
   user?: any;
+  setUser?: any;
 }
 
 const ModalAddUser: React.FC<ModalAddUserProps> = ({
@@ -32,20 +33,28 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
   title,
   changeFlag,
   setChangeFlag,
+  user,
 }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     try {
-      const response = await addUser(values);
+      let response;
+      if (title === "Thêm người dùng") {
+        response = await addUser(values)
+      }else {
+        response = await updateUser( user.id,values)
+
+      }
+
       if (response) {
         ShowNotification({
           message: "Thành công",
           description: "Thêm người dùng thành công",
           type: "success",
         });
-        setIsOpen(false)
+        setIsOpen(false);
         setChangeFlag(!changeFlag);
       }
     } catch (error: any) {
@@ -62,7 +71,7 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
           description: "Hết hạn đăng nhập",
           type: "error",
         });
-        navigate(path.SIGN_IN)
+        navigate(path.SIGN_IN);
       } else {
         ShowNotification({
           message: "Lỗi",
@@ -87,6 +96,20 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    if (user) {
+      console.log(user);
+      form.setFieldsValue({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+        password: user.password,
+        role: user.role,
+      });
+    }
+  }, [user]);
+
   return (
     <Modal
       open={isOpen}
@@ -97,6 +120,7 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
       className="max-h-[28rem] overflow-auto"
     >
       <Form
+        form={form}
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
@@ -133,7 +157,10 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
           name="phone"
           rules={[
             { required: true, message: "Vui lòng nhập số điện thoại!" },
-            { pattern: /^(0|\+84)[1-9]\d{8}$/, message: "Số điện thoại không hợp lệ!" }
+            {
+              pattern: /^(0|\+84)[1-9]\d{8}$/,
+              message: "Số điện thoại không hợp lệ!",
+            },
           ]}
         >
           <Input />

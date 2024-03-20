@@ -19,8 +19,10 @@ interface DataType {
 
 const User = () => {
   const [data, setData] = useState<DataType[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [changeFlag, setChangeFlag] = useState<boolean>(false)
+  const [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
+  const [isOpenEdit, setIsOpenEdit] = useState<boolean>(false);
+  const [changeFlag, setChangeFlag] = useState<boolean>(false);
+  const [userEdit, setUserEdit] = useState<any>({});
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Tên",
@@ -59,8 +61,18 @@ const User = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined className="text-xl cursor-pointer hover:text-blue-500" />
-          <DeleteOutlined onClick={() => {handleDelete(record.id)}} className="text-xl cursor-pointer hover:text-blue-500" />
+          <EditOutlined
+            onClick={() => {
+              handleOpenEdit(record);
+            }}
+            className="text-xl cursor-pointer hover:text-blue-500"
+          />
+          <DeleteOutlined
+            onClick={() => {
+              handleDelete(record.id);
+            }}
+            className="text-xl cursor-pointer hover:text-blue-500"
+          />
         </Space>
       ),
     },
@@ -80,41 +92,64 @@ const User = () => {
     })();
   }, [changeFlag]);
 
-  const handleOpen = () => {
-    setIsOpen(true);
-  }
+  const handleOpenAdd = () => {
+    setIsOpenAdd(true);
+  };
 
-  const handleDelete = async (id:string) => {
+  const handleOpenEdit = (user: any) => {
+    setIsOpenEdit(true);
+    setUserEdit(user);
+    // console.log(user)
+  };
+
+  const handleDelete = async (id: string) => {
     try {
-      const response = await deleteUser(id)
-      if(response) {
-        setChangeFlag(!changeFlag)
+      const response = await deleteUser(id);
+      if (response) {
+        setChangeFlag(!changeFlag);
         ShowNotification({
           message: "Thành công",
           description: "Xóa người dùng thành công",
-          type: "success"
-        })
+          type: "success",
+        });
       }
-    } catch (error:any) {
+    } catch (error: any) {
       ShowNotification({
         message: "Lỗi",
         description: error.response.data.message,
-        type: "error"
-      })
+        type: "error",
+      });
     }
-  }
+  };
 
   return (
     <div>
       <div className="w-full mb-6 flex justify-end">
         <div>
-          <Button className="bg-blue-500 text-white font-medium" onClick={handleOpen}>
+          <Button
+            className="bg-blue-500 text-white font-medium"
+            onClick={handleOpenAdd}
+          >
             Thêm người dùng
           </Button>
         </div>
       </div>
       <Table columns={columns} dataSource={data} />
-      <ModalAddUser isOpen={isOpen} setIsOpen={setIsOpen} changeFlag={changeFlag} setChangeFlag={setChangeFlag} title="Thêm người dùng"/>
+      <ModalAddUser
+        isOpen={isOpenAdd}
+        setIsOpen={setIsOpenAdd}
+        changeFlag={changeFlag}
+        setChangeFlag={setChangeFlag}
+        title="Thêm người dùng"
+      />
+      <ModalAddUser
+        user={userEdit}
+        isOpen={isOpenEdit}
+        setIsOpen={setIsOpenEdit}
+        changeFlag={changeFlag}
+        setChangeFlag={setChangeFlag}
+        title="Chỉnh sửa người dùng"
+      />
     </div>
   );
 };
