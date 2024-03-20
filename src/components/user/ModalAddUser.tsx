@@ -42,10 +42,9 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
     try {
       let response;
       if (title === "Thêm người dùng") {
-        response = await addUser(values)
-      }else {
-        response = await updateUser( user.id,values)
-
+        response = await addUser(values);
+      } else {
+        response = await updateUser(user.id, values);
       }
 
       if (response) {

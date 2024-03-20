@@ -104,7 +104,7 @@ const Order = () => {
   };
 
   return (
-    <div>
+    <div className="mt-14">
       <Table columns={columns} dataSource={data} />
       <Modal
         open={openUser}

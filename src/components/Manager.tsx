@@ -98,7 +98,7 @@ export default function Manager() {
                 children: [
                   {
                     key: path.RECEIPT,
-                    label: "Đơn hàng",
+                    label: "Đơn Nhập hàng",
                   },
                   {
                     key: path.RECEIPT_ADD,
