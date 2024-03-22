@@ -1,4 +1,4 @@
-export const getSize = (idSize: number) => {
+export const getSize = (idSize: number): null | any => {
   const sizes = [
     {
       id: 1,

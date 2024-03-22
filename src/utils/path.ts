@@ -8,7 +8,8 @@ const path = {
   ORDER: "order",
   DISCOUNT: "discount",
   RECEIPT: "receipt",
-  RECEIPT_ADD: "order-add",
+  RECEIPT_DETAIL: "/receipt-detail",
+  RECEIPT_ADD: "receipt-add",
 }
 
 export default path

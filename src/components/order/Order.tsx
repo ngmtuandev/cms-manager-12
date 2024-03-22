@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Card, Modal, Space, Table, Tag } from "antd";
+import { Card, Modal, Select, Space, Table } from "antd";
 import type { TableProps } from "antd";
-import { getOrders } from "../../apis/OrderApis";
+import {
+  getOrders,
+  updateStatusAdmin,
+  updateStatusRequest,
+} from "../../apis/OrderApis";
 import { getFormatPrice } from "../../utils/formatPrice";
+import Loading from "../common/Loading";
+import { ShowNotification } from "../../helpers/ShowNotification";
 
 interface DataType {
   id: number;
@@ -13,10 +19,27 @@ interface DataType {
 }
 const Order = () => {
   const [data, setData] = useState<DataType[]>([]);
+  const [flag, setFlag] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [openUser, setOpenUser] = useState(false);
   const [user, setUser] = useState<any>();
   const [openOrderDetail, setOpenOrderDetail] = useState(false);
   const [orderDetail, setOrderDetail] = useState<any[]>();
+
+  useEffect(() => {
+    (async () => {
+      const response: any = await getOrders();
+      if (response) {
+        const modifiedData = response.map((item: DataType) => ({
+          ...item,
+          key: item.id, // Setting the key to the id returned from the backend
+        }));
+        setData(modifiedData);
+        setIsLoading(false);
+      }
+    })();
+  }, [flag]);
+
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Địa chỉ giao",
@@ -28,6 +51,53 @@ const Order = () => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
+      render: (_, record: any) => {
+        return (
+          <Select
+            defaultValue={record.status}
+            style={{
+              minWidth: 140,
+            }}
+            status={handleColorStatus(record.status)}
+            onChange={(value) => {
+              handleChangeSelect(value, record);
+            }}
+            // disabled={handleDisableSelect(record.status)}
+            options={handleSelectField(record.status)}
+          />
+        );
+      },
+      filters: [
+        {
+          text: "IS_CANCELED",
+          value: "IS_CANCELED",
+        },
+        {
+          text: "IS_SUCCESS",
+          value: "IS_SUCCESS",
+        },
+        {
+          text: "IN_PROGRESS",
+          value: "IN_PROGRESS",
+        },
+        {
+          text: "IS_PENDING",
+          value: "IS_PENDING",
+        },
+        {
+          text: "DELIVERED",
+          value: "DELIVERED",
+        },
+        {
+          text: "RETURNED",
+          value: "RETURNED",
+        },
+        {
+          text: "REFUNDED",
+          value: "REFUNDED",
+        },
+      ],
+      onFilter: (value: string, record) => record.name.indexOf(value) === 0,
     },
     {
       title: "Giá",
@@ -72,19 +142,6 @@ const Order = () => {
     },
   ];
 
-  useEffect(() => {
-    (async () => {
-      const response: any = await getOrders();
-      if (response) {
-        const modifiedData = response.map((item: DataType) => ({
-          ...item,
-          key: item.id, // Setting the key to the id returned from the backend
-        }));
-        setData(modifiedData);
-      }
-    })();
-  }, []);
-
   const HandleShowUser = (value: any) => {
     setUser(value);
   };
@@ -103,9 +160,104 @@ const Order = () => {
     setOpenOrderDetail(false);
   };
 
+  const handleChangeSelect = async (value: string, record: any) => {
+    try {
+      const response = await updateStatusAdmin({
+        orderId: record.id,
+        status: value,
+      });
+
+      if (response) {
+        setFlag(!flag);
+        ShowNotification({
+          message: "Thành công",
+          description: "Cập nhật thành công trạng thái đơn hàng",
+          type: "success",
+        });
+      } else {
+        setFlag(!flag);
+      }
+    } catch (error: any) {
+      if (error) {
+        ShowNotification({
+          message: "Cảnh báo",
+          description: error.response.data.message,
+          type: "warning",
+        });
+      }
+      console.log(`error: ${error}`);
+    }
+  };
+
+  const handleColorStatus = (status: any): any => {
+    switch (status) {
+      case "IN_PROGRESS":
+        return "warning";
+      case "IN_PENDING":
+        return "warning";
+      case "IN_SUCCESS":
+        return "success";
+      case "DELIVERED":
+        return "success";
+      case "RETURNED":
+        return "error";
+      case "REFUNDED":
+        return "error";
+      default:
+        return "";
+    }
+  };
+
+  const handleSelectField = (status: string) => {
+    switch (status) {
+      case "IN_PROGRESS":
+        return [
+          { value: "IS_PENDING", label: "Đang gửi hàng" },
+          { value: "IS_SUCCESS", label: "Thành công" },
+          { value: "IS_CANCELLED", label: "Đã hủy đơn hàng" },
+        ];
+      case "IS_PENDING":
+        return [{ value: "IS_PENDING", label: "Đang gửi hàng" }];
+      case "IS_SUCCESS":
+        return [
+          { value: "RETURNED", label: "Đã trả lại hàng" },
+          { value: "REFUNDED", label: "Đã hoàn tiền" },
+        ];
+      case "DELIVERED":
+        return [
+          { value: "IS_SUCCESS", label: "Thành công" },
+          { value: "RETURNED", label: "Đã trả lại hàng" },
+          { value: "REFUNDED", label: "Đã hoàn tiền" },
+        ];
+      case "RETURNED":
+        return [{ value: "REFUNDED", label: "Đã hoàn tiền" }];
+      case "REFUNDED":
+        return [{ value: "REFUNDED", label: "Đã hoàn tiền" }];
+      default:
+        return [];
+    }
+  };
+
+  // const handleDisableSelect = (status: string) => {
+  //   if (
+  //     status === "IS_SUCCESS" ||
+  //     status === "IS_CANCELLED" ||
+  //     status === "DELIVERED" ||
+  //     status === "RETURNED" ||
+  //     status === "REFUNDED"
+  //   ) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
+
+  const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
+    console.log('params', pagination, filters, sorter, extra);
+  };
+
   return (
     <div className="mt-14">
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={data} onChange={onChange}/>
       <Modal
         open={openUser}
         title="Thông Tin Người dùng"
@@ -178,6 +330,11 @@ const Order = () => {
             </Card>
           ))}
       </Modal>
+      <Loading
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+        messageTimeout="Lỗi gọi dữ liệu quá lâu"
+      />
     </div>
   );
 };
