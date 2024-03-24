@@ -37,7 +37,7 @@ export default function Manager() {
 
   return (
     <div className="w-full h-lvh">
-      <Layout className="h-full">
+      <Layout className="min-h-lvh">
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="w-full mt-4 text-2xl font-bold text-center text-white">
             MSC
@@ -155,14 +155,19 @@ export default function Manager() {
           <Content
             style={{
               margin: "24px 16px",
-              padding: 24,
-              minHeight: 280,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
             }}
           >
+            <div
+              style={{
+                padding: 24,
+                minHeight: 360,
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+              }}
+            >
+              <AppRoutes />
+            </div>
             {/* render component */}
-            <AppRoutes />
           </Content>
         </Layout>
       </Layout>

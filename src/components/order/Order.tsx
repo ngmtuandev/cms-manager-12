@@ -69,40 +69,46 @@ const Order = () => {
       },
       filters: [
         {
-          text: "IS_CANCELED",
-          value: "IS_CANCELED",
+          text: "Đã hủy",
+          value: "IS_CANCELLED",
         },
         {
-          text: "IS_SUCCESS",
+          text: "Đặt thành công",
           value: "IS_SUCCESS",
         },
         {
-          text: "IN_PROGRESS",
+          text: "Đang xử lý",
           value: "IN_PROGRESS",
         },
         {
-          text: "IS_PENDING",
+          text: "Đang vật chuyển",
           value: "IS_PENDING",
         },
         {
-          text: "DELIVERED",
+          text: "Đã Vận chuyển",
           value: "DELIVERED",
         },
         {
-          text: "RETURNED",
+          text: "Đã trả lại hàng",
           value: "RETURNED",
         },
         {
-          text: "REFUNDED",
+          text: "Đã hoàng tiền",
           value: "REFUNDED",
         },
       ],
-      onFilter: (value: string, record) => record.name.indexOf(value) === 0,
+      onFilter: (value: string, record):boolean => {
+        return  record.status.indexOf(value) === 0
+      },
+
     },
     {
       title: "Giá",
       dataIndex: "total",
       key: "total",
+      sorter: (a, b) => {
+        return a.total - b.total
+      },
     },
     {
       title: "User",
@@ -238,18 +244,6 @@ const Order = () => {
     }
   };
 
-  // const handleDisableSelect = (status: string) => {
-  //   if (
-  //     status === "IS_SUCCESS" ||
-  //     status === "IS_CANCELLED" ||
-  //     status === "DELIVERED" ||
-  //     status === "RETURNED" ||
-  //     status === "REFUNDED"
-  //   ) {
-  //     return true;
-  //   }
-  //   return false;
-  // };
 
   const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
@@ -257,7 +251,7 @@ const Order = () => {
 
   return (
     <div className="mt-14">
-      <Table columns={columns} dataSource={data} onChange={onChange}/>
+      <Table columns={columns} dataSource={data} onChange={onChange} />
       <Modal
         open={openUser}
         title="Thông Tin Người dùng"
