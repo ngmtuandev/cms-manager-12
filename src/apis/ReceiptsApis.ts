@@ -9,7 +9,16 @@ const getReceipts = async () => {
   }
 };
 
+const createReceipts = async (data:any) => {
+  try {
+    const response = await axiosClient.post("/receipt", data);
+    return response;
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 
 
-export {  getReceipts };
+
+export {  getReceipts, createReceipts};

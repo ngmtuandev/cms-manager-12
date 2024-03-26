@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "../../hooks/userSelecter";
 
 import { getSize } from "../../helpers/getSize";
 
-
 interface DataType {
   id: number;
   name: string;
@@ -29,6 +28,8 @@ const ReceiptDetail = () => {
   useEffect(() => {
     setData(receiptDetail);
   }, []);
+
+  console.log("data ", dataModal);
 
   const columns: TableProps<DataType>["columns"] = [
     {
@@ -128,19 +129,23 @@ const ReceiptDetail = () => {
               <div className="w-2/3">
                 <p className="text-sm font-medium">
                   Màu sắc:{" "}
-                  <span className="text-sm text-slate-500 font-normal"></span>
+                  <span className="text-sm text-slate-500 font-normal">
+                    {option.color}
+                  </span>
                 </p>
                 <p className="text-sm font-medium">
                   Kích thước:{" "}
-                  <span className="text-sm text-slate-500 font-normal">
-                    {getSize(option?.sizeId).name}
-                  </span>
-                </p>
-                <p className="text-sm font-medium">
-                  Mô tả:{" "}
-                  <span className="text-sm text-slate-500 font-normal">
-                    {getSize(option?.sizeId).caption}
-                  </span>
+                  {option.sizeId &&
+                    option.sizeId.map((size: any) => (
+                      <>
+                        <span className="text-sm text-slate-500 font-normal block">
+                          {getSize(size).name}/{getSize(size).caption}
+                        </span>
+                        <span className="text-sm  font-medium block">
+                          Số lượng: <span className=" text-sm text-slate-500">{option.quantity}</span>
+                        </span>
+                      </>
+                    ))}
                 </p>
               </div>
               <div className="w-1/3 ">
@@ -155,7 +160,6 @@ const ReceiptDetail = () => {
             </div>
           ))}
       </Modal>
-      
     </div>
   );
 };

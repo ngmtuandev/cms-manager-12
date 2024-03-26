@@ -67,6 +67,7 @@ const Order = () => {
           />
         );
       },
+      
       filters: [
         {
           text: "Đã hủy",
@@ -98,6 +99,7 @@ const Order = () => {
         },
       ],
       onFilter: (value: string, record):boolean => {
+        console.log(value)
         return  record.status.indexOf(value) === 0
       },
 

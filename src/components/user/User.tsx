@@ -6,6 +6,7 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import ModalAddUser from "./ModalAddUser";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import moment from "moment";
+import { useAppSelector } from "../../hooks/userSelecter";
 
 interface DataType {
   id: string;
@@ -18,6 +19,7 @@ interface DataType {
 }
 
 const User = () => {
+  const userRole = useAppSelector((state) => state.user.role);
   const [data, setData] = useState<DataType[]>([]);
   const [isOpenAdd, setIsOpenAdd] = useState<boolean>(false);
   const [isOpenEdit, setIsOpenEdit] = useState<boolean>(false);
@@ -61,18 +63,22 @@ const User = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined
-            onClick={() => {
-              handleOpenEdit(record);
-            }}
-            className="text-xl cursor-pointer hover:text-blue-500"
-          />
-          <DeleteOutlined
-            onClick={() => {
-              handleDelete(record.id);
-            }}
-            className="text-xl cursor-pointer hover:text-blue-500"
-          />
+          {userRole === "ADMIN" && (
+            <>
+              <EditOutlined
+                onClick={() => {
+                  handleOpenEdit(record);
+                }}
+                className="text-xl cursor-pointer hover:text-blue-500"
+              />
+              <DeleteOutlined
+                onClick={() => {
+                  handleDelete(record.id);
+                }}
+                className="text-xl cursor-pointer hover:text-blue-500"
+              />
+            </>
+          )}
         </Space>
       ),
     },
@@ -99,7 +105,6 @@ const User = () => {
   const handleOpenEdit = (user: any) => {
     setIsOpenEdit(true);
     setUserEdit(user);
-    // console.log(user)
   };
 
   const handleDelete = async (id: string) => {
@@ -126,12 +131,14 @@ const User = () => {
     <div>
       <div className="w-full mb-6 flex justify-end">
         <div>
-          <Button
-            className="bg-blue-500 text-white font-medium"
-            onClick={handleOpenAdd}
-          >
-            Thêm người dùng
-          </Button>
+          {userRole === "ADMIN" && (
+            <Button
+              className="bg-blue-500 text-white font-medium"
+              onClick={handleOpenAdd}
+            >
+              Thêm người dùng
+            </Button>
+          )}
         </div>
       </div>
       <Table columns={columns} dataSource={data} />

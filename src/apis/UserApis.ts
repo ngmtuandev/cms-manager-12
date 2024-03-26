@@ -10,6 +10,15 @@ const signIn = async (data: SignRes) => {
   }
 };
 
+const getProfile = async () => {
+  try {
+    const response = await axiosClient.get("/users/profile");
+    return response; // Return data if needed
+  } catch (error) {
+    throw error; // Rethrow error or handle it accordingly
+  }
+};
+
 const addUser = async (data: any) => {
   try {
     const response = await axiosClient.post("/auth/local/admin/signup", data);
@@ -55,5 +64,5 @@ const getUsers = async () => {
   }
 };
 
-export { signIn, logout, getUsers, addUser, deleteUser, updateUser};
+export { signIn, logout, getUsers, addUser, deleteUser, updateUser, getProfile};
   

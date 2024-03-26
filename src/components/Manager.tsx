@@ -14,10 +14,13 @@ import { Layout, Menu, Button, theme } from "antd";
 import AppRoutes from "../routers/AppRouters";
 import { useNavigate } from "react-router-dom";
 import path from "../utils/path";
+import { getUserProfile } from "../store/slice/user";
+import { useAppDispatch } from "../hooks/userSelecter";
 const { Header, Sider, Content } = Layout;
 
 export default function Manager() {
   const [collapsed, setCollapsed] = useState(false);
+  const dispatch = useAppDispatch();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -28,6 +31,8 @@ export default function Manager() {
     if (!token) {
       navigate(path.SIGN_IN);
     }
+    dispatch(getUserProfile());
+
   }, [token]);
 
   const handleLogout = () => {

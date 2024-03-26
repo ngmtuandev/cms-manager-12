@@ -8,6 +8,7 @@ const path = {
   ORDER: "order",
   DISCOUNT: "discount",
   RECEIPT: "receipt",
+  DISCOUNT_ADD_PRODUCT: "/discount/:id/add_product",
   RECEIPT_DETAIL: "/receipt-detail",
   RECEIPT_ADD: "receipt-add",
 }
