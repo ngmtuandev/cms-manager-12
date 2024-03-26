@@ -93,9 +93,15 @@ const DiscountAddProduct = () => {
 
     try {
       (async () => {
-        const response = await addProductToDiscount(id, selectedRowKeys)
-      
-        console.log(response);
+        const response = await addProductToDiscount(id, selectedRowKeys);
+
+        if (response) {
+          ShowNotification({
+            message: "Thành công",
+            description: "Thêm giảm giá cho sản phẩm thành công!",
+            type: "success",
+          });
+        }
       })();
     } catch (error) {
       console.error(error);
