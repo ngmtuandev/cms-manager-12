@@ -74,6 +74,8 @@ const TableShowOptions: React.FC<TableShowOptions> = ({ data }) => {
     console.log(currentSlide);
   };
 
+  console.log(data)
+
   return (
     <div>
       <Table columns={columns} dataSource={data} />

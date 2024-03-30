@@ -81,7 +81,7 @@ const AddOptions: React.FC<AddOptionsProps> = memo(({ options, setOption }) => {
     return e?.fileList;
   };
 
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+  const onFinish: FormProps<FieldType>["onFinish"] = (values:any) => {
     if(!colorHex) {
       ShowNotification({
         message: "Cảnh báo",
@@ -101,7 +101,6 @@ const AddOptions: React.FC<AddOptionsProps> = memo(({ options, setOption }) => {
 
     }
 
-    console.log(values.quantity)
 
     if(!values.quantity) {
       return;

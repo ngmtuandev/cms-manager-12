@@ -26,6 +26,7 @@ import AddOptions from "./AddOptions";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import TableShowOptions from "./TableShowOptions";
 import { createReceipts } from "../../apis/ReceiptsApis";
+import { useForm } from "antd/es/form/Form";
 const { TextArea } = Input;
 
 type images = {
@@ -67,6 +68,7 @@ const normFile = (e: any) => {
 };
 
 const ReceiptAdd = () => {
+  const [form] = Form.useForm();
   const [orderDetail, setOrderDetail] = useState<ReceiptDetail[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [shops, setShop] = useState();
@@ -74,7 +76,7 @@ const ReceiptAdd = () => {
   const [selectShop, setSelectShop] = useState();
   const [selectCategories, setSelectCategories] = useState();
   const [addressShopSelect, setAddressShopSelect] = useState<number>();
-  const [mainImage, setMainImage] = useState<string>();
+  const [mainImage, setMainImage] = useState<any>();
   const [options, setOptions] = useState<any[]>([]);
   const [openDetailOrder, setOpenDetailOrder] = useState(false);
   const [product, setProduct] = useState<any>();
@@ -188,7 +190,6 @@ const ReceiptAdd = () => {
           type: "warning",
         });
         return;
-
       }
       const data = {
         shopId: selectShopId,
@@ -214,6 +215,9 @@ const ReceiptAdd = () => {
           description: "Nhập hàng thành công",
           type: "success",
         });
+        setOptions([]);
+        form.resetFields();
+        setOpenDetailOrder(false)
       }
     } catch (error) {
       console.log(error);
@@ -260,6 +264,7 @@ const ReceiptAdd = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
             className="w-4/5"
+            form={form}
           >
             <Form.Item<FieldType>
               label="Tên sản phẩm"

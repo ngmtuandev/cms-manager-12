@@ -8,7 +8,6 @@ import path from "../../utils/path";
 import { useAppDispatch } from "../../hooks/userSelecter";
 import { setReceiptDetail } from "../../store/slice/receipt";
 
-
 interface DataType {
   id: number;
   nameReceipt: string;
@@ -21,7 +20,7 @@ const Receipt = () => {
   const [data, setData] = useState<DataType[]>([]);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  
+
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Tên Đơn hàng",
@@ -52,8 +51,8 @@ const Receipt = () => {
         <Space size="middle">
           <div
             onClick={() => {
-              dispatch(setReceiptDetail(record.receiptDetail))
-              navigate(path.RECEIPT_DETAIL)
+              dispatch(setReceiptDetail(record.receiptDetail));
+              navigate(path.RECEIPT_DETAIL);
             }}
             className="tex-xl font-medium cursor-pointer hover:text-blue-500 ml-8 transition-all duration-75"
           >
@@ -80,7 +79,14 @@ const Receipt = () => {
 
   return (
     <div className="mt-14">
-      <Table columns={columns} dataSource={data} />
+      <Table
+        className="min-h-[28rem]"
+        columns={columns}
+        dataSource={data}
+        pagination={{
+          pageSize: 4,
+        }}
+      />
     </div>
   );
 };

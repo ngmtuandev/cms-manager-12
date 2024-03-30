@@ -29,8 +29,6 @@ const ReceiptDetail = () => {
     setData(receiptDetail);
   }, []);
 
-  console.log("data ", dataModal);
-
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Tên sản phẩm",
@@ -113,7 +111,11 @@ const ReceiptDetail = () => {
           </Link>
         </div>
       </div>
-      <Table columns={columns} dataSource={data} />
+      <Table
+        columns={columns}
+        dataSource={data}
+      
+      />
       <Modal
         open={openModal}
         title="Lựa chọn"
@@ -142,7 +144,10 @@ const ReceiptDetail = () => {
                           {getSize(size).name}/{getSize(size).caption}
                         </span>
                         <span className="text-sm  font-medium block">
-                          Số lượng: <span className=" text-sm text-slate-500">{option.quantity}</span>
+                          Số lượng:{" "}
+                          <span className=" text-sm text-slate-500">
+                            {option.quantity}
+                          </span>
                         </span>
                       </>
                     ))}

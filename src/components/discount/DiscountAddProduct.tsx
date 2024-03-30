@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "antd";
-import type { TableColumnsType } from "antd";
+import type { TableColumnsType, TableProps } from "antd";
 import { Link, useParams } from "react-router-dom";
 import Loading from "../common/Loading";
 import { getProducts } from "../../apis/ProductsApi";
@@ -11,6 +11,7 @@ interface DataType {
   key: React.Key;
   id: number;
   name: string;
+  category: string;
   price: number;
   mainImage: string;
 }
@@ -25,6 +26,39 @@ const columns: TableColumnsType<DataType> = [
     title: "Giá hiện tại",
     dataIndex: "price",
     key: "price",
+  },
+  {
+    title: "loại",
+    dataIndex: "category",
+    key: "category",
+    filters: [
+      {
+        text: "Áo thun",
+        value: "Áo thun",
+      },
+      {
+        text: "Áo Polo",
+        value: "Áo Polo",
+      },
+      {
+        text: "Áo sơmi",
+        value: "Áo sơmi",
+      },
+
+      {
+        text: "Áo khoác",
+        value: "Áo khoác",
+      },
+      {
+        text: "Quần short",
+        value: "Quần short",
+      },
+      {
+        text: "Quần jeans",
+        value: "Quần jeans",
+      },
+    ],
+    onFilter: (value: string, record): any => record.category.indexOf(value) === 0,
   },
   {
     title: "Hình ảnh",
@@ -50,13 +84,13 @@ const DiscountAddProduct = () => {
     try {
       (async () => {
         const response: any = await getProducts();
-
         const formatData: DataType[] = [];
 
         response.forEach((product: any) => {
           const productTmp = {
             ...product,
             key: product.id,
+            category: product.Category.name,
           };
           formatData.push(productTmp);
         });
@@ -108,6 +142,15 @@ const DiscountAddProduct = () => {
     }
   };
 
+  const onChange: TableProps<DataType>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
+
   return (
     <div>
       <div className="w-full flex justify-end">
@@ -127,7 +170,15 @@ const DiscountAddProduct = () => {
       <span style={{ marginLeft: 8 }}>
         {hasSelected ? `Selected ${selectedRowKeys.length} items` : ""}
       </span>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+      <Table
+        rowSelection={rowSelection}
+        columns={columns}
+        dataSource={data}
+        onChange={onChange}
+        pagination={{
+          pageSize: 3,
+        }}
+      />
       <Loading
         isLoading={isLoading}
         setIsLoading={setIsLoading}

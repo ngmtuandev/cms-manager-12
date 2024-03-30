@@ -12,6 +12,7 @@ import { RangePickerProps } from "antd/es/date-picker";
 import { createDiscount, updateDiscount } from "../../apis/DiscountApi";
 import moment from "moment";
 import dayjs from "dayjs";
+import MainImages from "../receipt/upload/MainImages";
 
 type FieldType = {
   id: string;
@@ -45,6 +46,7 @@ const ModalDiscount: React.FC<ModalAddUserProps> = ({
   const [dateStart, setDateStart] = useState<any>();
   const [dateEnd, setDateEnd] = useState<any>();
   const navigate = useNavigate();
+  const [image, setImage] = useState<any>("");
 
   useEffect(() => {
     if (discountEdit) {
@@ -59,16 +61,16 @@ const ModalDiscount: React.FC<ModalAddUserProps> = ({
     }
   }, [discountEdit]);
 
-
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     try {
-      
+      console.log(image);
       if (title === "Thêm giảm giá") {
         const response = await createDiscount({
           ...values,
           dateStart: dateStart,
           dateEnd: dateEnd,
           percent: parseInt(values.percent),
+          bannerImage: image.url,
         });
         if (response) {
           ShowNotification({
@@ -79,14 +81,17 @@ const ModalDiscount: React.FC<ModalAddUserProps> = ({
           setIsOpen(false);
           setChangeFlag(!changeFlag);
         }
-
       } else if (title === "Chỉnh sửa giảm giá") {
-        const response = await updateDiscount({
-          ...values,
-          dateStart: dateStart,
-          dateEnd: dateEnd,
-          percent: parseInt(values.percent),
-        }, discountEdit.id);
+        const response = await updateDiscount(
+          {
+            ...values,
+            dateStart: dateStart,
+            dateEnd: dateEnd,
+            percent: parseInt(values.percent),
+            bannerImage: image.url,
+          },
+          discountEdit.id
+        );
         if (response) {
           ShowNotification({
             message: "Thành công",
@@ -136,7 +141,6 @@ const ModalDiscount: React.FC<ModalAddUserProps> = ({
     setIsOpen(false);
   };
 
-  
   const onChange = (
     value: RangePickerProps["value"],
     dateString: [string, string] | string
@@ -183,7 +187,6 @@ const ModalDiscount: React.FC<ModalAddUserProps> = ({
 
         <Form.Item
           label="date"
- 
           rules={[{ required: true, message: "Vui lòng chọn Ngày!" }]}
         >
           {discountEdit && (
@@ -200,7 +203,12 @@ const ModalDiscount: React.FC<ModalAddUserProps> = ({
             <RangePicker format="DD-MM-YYYY" onChange={onChange} />
           )}
         </Form.Item>
+        <Form.Item
+          label="Hình ảnh banner"
 
+        >
+          <MainImages mainImage={image} setMainImage={setImage} />
+        </Form.Item>
         <Form.Item
           label="Phần trăm"
           name="percent"
