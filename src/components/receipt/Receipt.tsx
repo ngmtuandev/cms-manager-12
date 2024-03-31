@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
 import { useAppDispatch } from "../../hooks/userSelecter";
 import { setReceiptDetail } from "../../store/slice/receipt";
+import { FormatMoney } from "../../helpers/FormatCurency";
 
 interface DataType {
   id: number;
@@ -37,6 +38,9 @@ const Receipt = () => {
       title: "Giá",
       dataIndex: "totalPrice",
       key: "totalPrice",
+      render: (_, record: any) => {
+        return <div>{FormatMoney(Number(record?.totalPrice))}</div>;
+      },
     },
     {
       title: "Cửa hàng nhập",

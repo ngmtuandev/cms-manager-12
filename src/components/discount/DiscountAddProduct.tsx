@@ -6,6 +6,7 @@ import Loading from "../common/Loading";
 import { getProducts } from "../../apis/ProductsApi";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import { addProductToDiscount } from "../../apis/DiscountApi";
+import { FormatMoney } from "../../helpers/FormatCurency";
 
 interface DataType {
   key: React.Key;
@@ -26,6 +27,9 @@ const columns: TableColumnsType<DataType> = [
     title: "Giá hiện tại",
     dataIndex: "price",
     key: "price",
+    render: (_, record: any) => {
+      return <div>{FormatMoney(record?.price)}</div>;
+    },
   },
   {
     title: "loại",
@@ -58,7 +62,8 @@ const columns: TableColumnsType<DataType> = [
         value: "Quần jeans",
       },
     ],
-    onFilter: (value: string, record): any => record.category.indexOf(value) === 0,
+    onFilter: (value: string, record): any =>
+      record.category.indexOf(value) === 0,
   },
   {
     title: "Hình ảnh",

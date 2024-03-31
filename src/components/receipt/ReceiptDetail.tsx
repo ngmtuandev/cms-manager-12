@@ -6,6 +6,7 @@ import path from "../../utils/path";
 import { useAppDispatch, useAppSelector } from "../../hooks/userSelecter";
 
 import { getSize } from "../../helpers/getSize";
+import { FormatMoney } from "../../helpers/FormatCurency";
 
 interface DataType {
   id: number;
@@ -21,12 +22,14 @@ const ReceiptDetail = () => {
   const [openModal, setOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState([]);
   const [data, setData] = useState<DataType[]>([]);
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     setData(receiptDetail);
+    if (receiptDetail.length <= 0) {
+      navigate("/receipt")
+    }
   }, []);
 
   const columns: TableProps<DataType>["columns"] = [
@@ -52,6 +55,9 @@ const ReceiptDetail = () => {
       title: "Giá",
       dataIndex: "price",
       key: "price",
+      render: (_, record: any) => {
+        return <div>{FormatMoney(Number(record?.price))}</div>;
+      },
     },
     {
       title: "Mô tả",
@@ -111,11 +117,7 @@ const ReceiptDetail = () => {
           </Link>
         </div>
       </div>
-      <Table
-        columns={columns}
-        dataSource={data}
-      
-      />
+      <Table columns={columns} dataSource={data} />
       <Modal
         open={openModal}
         title="Lựa chọn"

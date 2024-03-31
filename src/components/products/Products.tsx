@@ -7,6 +7,7 @@ import { getProducts } from "../../apis/ProductsApi";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import { addProductToDiscount } from "../../apis/DiscountApi";
 import ModelProductOptions from "./ModelProductOptions";
+import { FormatMoney } from "../../helpers/FormatCurency";
 
 interface DataType {
   key: React.Key;
@@ -58,6 +59,9 @@ const Product = () => {
       title: "Giá hiện tại",
       dataIndex: "price",
       key: "price",
+      render: (_, record: any) => {
+        return <div>{FormatMoney(Number(record?.price))}</div>;
+      },
     },
     {
       title: "Hình ảnh",
