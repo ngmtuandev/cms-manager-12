@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Card, Modal, Select, Space, Table } from "antd";
+import React, { useEffect, useState, useRef } from "react";
+import { Button, Card, Modal, Select, Space, Table } from "antd";
 import type { TableProps } from "antd";
 import {
   getOrders,
@@ -9,6 +9,8 @@ import {
 import { getFormatPrice } from "../../utils/formatPrice";
 import Loading from "../common/Loading";
 import { ShowNotification } from "../../helpers/ShowNotification";
+import { FormatMoney } from "../../helpers/FormatCurency";
+import ModelDetailOrder from "./ModelDetailOrder";
 
 interface DataType {
   id: number;
@@ -21,10 +23,9 @@ const Order = () => {
   const [data, setData] = useState<DataType[]>([]);
   const [flag, setFlag] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [openUser, setOpenUser] = useState(false);
-  const [user, setUser] = useState<any>();
+
   const [openOrderDetail, setOpenOrderDetail] = useState(false);
-  const [orderDetail, setOrderDetail] = useState<any[]>();
+  const [orderDetail, setOrderDetail] = useState<any>();
 
   useEffect(() => {
     (async () => {
@@ -67,7 +68,6 @@ const Order = () => {
           />
         );
       },
-      
       filters: [
         {
           text: "Đã hủy",
@@ -98,36 +98,29 @@ const Order = () => {
           value: "REFUNDED",
         },
       ],
-      onFilter: (value: string, record):boolean => {
-        console.log(value)
-        return  record.status.indexOf(value) === 0
+      onFilter: (value: string, record): boolean => {
+        console.log(value);
+        return record.status.indexOf(value) === 0;
       },
-
     },
     {
       title: "Giá",
       dataIndex: "total",
       key: "total",
+      render: (_, record: any) => {
+        console.log(record);
+        return <Space size="middle">{FormatMoney(Number(record.total))}</Space>;
+      },
       sorter: (a, b) => {
-        return a.total - b.total
+        return a.total - b.total;
       },
     },
     {
-      title: "User",
+      title: "Phương thức thanh toán",
       key: "user",
       dataIndex: "user",
       render: (_, record: any) => (
-        <Space size="middle">
-          <div
-            onClick={() => {
-              HandleShowUser(record?.user);
-              setOpenUser(true);
-            }}
-            className="tex-xl font-medium cursor-pointer hover:text-blue-500 transition-all duration-75"
-          >
-            Xem thêm
-          </div>
-        </Space>
+        <Space size="middle">{getPayment(record.payment)}</Space>
       ),
     },
     {
@@ -138,7 +131,7 @@ const Order = () => {
         <Space size="middle">
           <div
             onClick={() => {
-              HandleShowDetailOrder(record?.OrderDetail);
+              HandleShowDetailOrder(record);
               setOpenOrderDetail(true);
             }}
             className="tex-xl font-medium cursor-pointer hover:text-blue-500 ml-8 transition-all duration-75"
@@ -150,22 +143,19 @@ const Order = () => {
     },
   ];
 
-  const HandleShowUser = (value: any) => {
-    setUser(value);
+  const getPayment = (payment: string) => {
+    switch (payment) {
+      case "UPON_RECEIPT":
+        return <div>Thanh toán khi nhận hàng</div>;
+      case "VNPAYMENT":
+        return <div>Thanh toán bằng VNPAY</div>;
+      default:
+        return "Unknown status";
+    }
   };
 
   const HandleShowDetailOrder = (value: any) => {
     setOrderDetail(value);
-  };
-
-  const handleOk = () => {
-    setOpenUser(false);
-    setOpenOrderDetail(false);
-  };
-
-  const handleCancel = () => {
-    setOpenUser(false);
-    setOpenOrderDetail(false);
   };
 
   const handleChangeSelect = async (value: string, record: any) => {
@@ -246,86 +236,24 @@ const Order = () => {
     }
   };
 
-
-  const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
+  const onChange: TableProps<DataType>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log("params", pagination, filters, sorter, extra);
   };
 
   return (
     <div className="mt-14">
       <Table columns={columns} dataSource={data} onChange={onChange} />
-      <Modal
-        open={openUser}
-        title="Thông Tin Người dùng"
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={""}
-      >
-        <div>
-          <p className="font-medium">
-            Họ & Tên:{" "}
-            <span className="font-normal">
-              {user?.firstName} {user?.lastName}
-            </span>
-          </p>
-          <p className="font-medium">
-            Email: <span className="font-normal">{user?.email}</span>
-          </p>
-          <p className="font-medium">
-            Số điện thoại: <span className="font-normal">{user?.phone}</span>
-          </p>
-        </div>
-      </Modal>
-      <Modal
-        open={openOrderDetail}
-        title="Chi tiết đơn hàng"
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={""}
-        className="max-h-[28rem] overflow-auto"
-      >
-        {orderDetail &&
-          orderDetail?.length > 0 &&
-          orderDetail?.map((product: any, index: number) => (
-            <Card
-              key={index}
-              title={product.productOption.Product.name}
-              bordered={false}
-              className="shadow-lg w-full my-4 bg-slate-50 mx-2"
-            >
-              <div className="flex items-center">
-                <div className="w-1/2">
-                  <p className="text-md font-medium">
-                    Loại sản phẩm:{" "}
-                    <span className="font-normal text-slate-400">
-                      {product.productOption.Color.color} /{" "}
-                      {product.productOption.Size.name}
-                    </span>
-                  </p>
-                  <p className="text-md font-medium">
-                    Số lượng:{" "}
-                    <span className="font-normal text-slate-400">
-                      {product.quantity}
-                    </span>
-                  </p>
-                  <p className="text-md font-medium">
-                    Giá:{" "}
-                    <span className="font-normal text-slate-400">
-                      {getFormatPrice(product.productOption.Product.price)}
-                    </span>
-                  </p>
-                </div>
-                <div className="w-1/2 flex justify-center">
-                  <img
-                    className="w-[6rem] rounded-md shadow-lg"
-                    src={product.productOption.Product.mainImage}
-                    alt="hình ảnh sản phẩm"
-                  />
-                </div>
-              </div>
-            </Card>
-          ))}
-      </Modal>
+
+      <ModelDetailOrder
+        openOrderDetail={openOrderDetail}
+        setOpenOrderDetail={setOpenOrderDetail}
+        orderDetail={orderDetail}
+      />
       <Loading
         isLoading={isLoading}
         setIsLoading={setIsLoading}
