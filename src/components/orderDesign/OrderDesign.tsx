@@ -1,16 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Button, Card, Modal, Select, Space, Table } from "antd";
+import { useEffect, useState, useRef } from "react";
+import { Button, Card, Modal, Select, Space, Table, Tooltip } from "antd";
 import type { TableProps } from "antd";
 import {
   getOrders,
+  getOrdersDesign,
   updateStatusAdmin,
+  updateStatusDesignAdmin,
   updateStatusRequest,
 } from "../../apis/OrderApis";
 import { getFormatPrice } from "../../utils/formatPrice";
 import Loading from "../common/Loading";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import { FormatMoney } from "../../helpers/FormatCurency";
-import ModelDetailOrder from "./ModelDetailOrder";
+import ModelDetailOrderDesign from "./ModelDetailOrderDesign";
+import ModelCalculate from "./ModelCalculate";
 
 interface DataType {
   id: number;
@@ -19,18 +22,21 @@ interface DataType {
   address: string;
   total: number;
 }
-const Order = () => {
+
+const OrderDesign = () => {
   const [data, setData] = useState<DataType[]>([]);
   const [flag, setFlag] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const [openOrderDetail, setOpenOrderDetail] = useState(false);
+  const [openCalculate, setOpenCalculate] = useState(false);
   const [orderDetail, setOrderDetail] = useState<any>();
 
   useEffect(() => {
     (async () => {
-      const response: any = await getOrders();
+      const response: any = await getOrdersDesign();
       if (response) {
+        console.log(response);
         const modifiedData = response.map((item: DataType) => ({
           ...item,
           key: item.id, // Setting the key to the id returned from the backend
@@ -54,18 +60,27 @@ const Order = () => {
       key: "status",
       render: (_, record: any) => {
         return (
-          <Select
-            defaultValue={record.status}
-            style={{
-              minWidth: 140,
-            }}
-            status={handleColorStatus(record.status)}
-            onChange={(value) => {
-              handleChangeSelect(value, record);
-            }}
-            // disabled={handleDisableSelect(record.status)}
-            options={handleSelectField(record.status)}
-          />
+          <>
+            <Tooltip
+              title={
+               ( Number(record.total)  <= 0&& record.status === 'IN_PROGRESS') ? "Vui lòng định giá đơn hàng." : ""
+              }
+            >
+              <Select
+                defaultValue={record.status}
+                style={{
+                  minWidth: 140,
+                }}
+                disabled={Number(record.total) <= 0}
+                status={handleColorStatus(record.status)}
+                onChange={(value) => {
+                  handleChangeSelect(value, record);
+                }}
+                // disabled={handleDisableSelect(record.status)}
+                options={handleSelectField(record.status)}
+              />
+            </Tooltip>
+          </>
         );
       },
       filters: [
@@ -109,19 +124,29 @@ const Order = () => {
       key: "total",
       render: (_, record: any) => {
         console.log(record);
-        return <Space size="middle">{FormatMoney(Number(record.total))}</Space>;
+        return (
+          <Space size="middle">
+            {Number(record.total) <= 0 ? (
+              <>
+                <Button
+                  className="bg-green-100 rounded-lg"
+                  onClick={() => {
+                    HandleShowDetailOrder(record);
+                    setOpenCalculate(true); //
+                  }}
+                >
+                  Định giá đơn hàng
+                </Button>
+              </>
+            ) : (
+              <>{FormatMoney(Number(record.total))}</>
+            )}
+          </Space>
+        );
       },
       sorter: (a, b) => {
         return a.total - b.total;
       },
-    },
-    {
-      title: "Phương thức thanh toán",
-      key: "user",
-      dataIndex: "user",
-      render: (_, record: any) => (
-        <Space size="middle">{getPayment(record.payment)}</Space>
-      ),
     },
     {
       title: "Xem chi tiết đơn hàng",
@@ -143,24 +168,13 @@ const Order = () => {
     },
   ];
 
-  const getPayment = (payment: string) => {
-    switch (payment) {
-      case "UPON_RECEIPT":
-        return <div>Thanh toán khi nhận hàng</div>;
-      case "VNPAYMENT":
-        return <div>Thanh toán bằng VNPAY</div>;
-      default:
-        return "Unknown status";
-    }
-  };
-
   const HandleShowDetailOrder = (value: any) => {
     setOrderDetail(value);
   };
 
   const handleChangeSelect = async (value: string, record: any) => {
     try {
-      const response = await updateStatusAdmin({
+      const response = await updateStatusDesignAdmin({
         orderId: record.id,
         status: value,
       });
@@ -187,6 +201,24 @@ const Order = () => {
     }
   };
 
+  const getValueStatus = (status: string) => {
+    switch (status) {
+      case "IN_PROGRESS":
+        return "Đang xử lý";
+      case "IN_PENDING":
+        return "Đang vật chuyển";
+      case "IN_SUCCESS":
+        return "Đặt thành công";
+      case "DELIVERED":
+        return "Đã Vận chuyển";
+      case "RETURNED":
+        return "Đã trả lại hàng";
+      case "REFUNDED":
+        return "Đã hoàng tiền";
+      default:
+        return "";
+    }
+  };
   const handleColorStatus = (status: any): any => {
     switch (status) {
       case "IN_PROGRESS":
@@ -255,11 +287,17 @@ const Order = () => {
           pageSize: 4,
         }}
       />
-
-      <ModelDetailOrder
+      <ModelDetailOrderDesign
         openOrderDetail={openOrderDetail}
         setOpenOrderDetail={setOpenOrderDetail}
         orderDetail={orderDetail}
+      />
+      <ModelCalculate
+        openOrderDetail={openCalculate}
+        setOpenOrderDetail={setOpenCalculate}
+        orderDetail={orderDetail}
+        flag={flag}
+        setFlag={setFlag}
       />
       <Loading
         isLoading={isLoading}
@@ -270,4 +308,4 @@ const Order = () => {
   );
 };
 
-export default Order;
+export default OrderDesign;

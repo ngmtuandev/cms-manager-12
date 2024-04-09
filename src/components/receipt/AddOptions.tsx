@@ -66,7 +66,6 @@ const AddOptions: React.FC<AddOptionsProps> = memo(({ options, setOption }) => {
     if (newFileList) {
       newFileList.forEach((file: any) => {
         const images = { filePath: file?.response?.url };
-        console.log("watch images", images)
         fileListImages.push(images);
       });
     }

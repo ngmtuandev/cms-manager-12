@@ -1,9 +1,10 @@
 import axiosClient from "../libs/axios-client";
 
 export type updateStatusRequest = {
-  orderId: string,
-  status: string
-}
+  orderId: string;
+  status: string;
+  total?: number;
+};
 
 const getOrders = async () => {
   try {
@@ -14,13 +15,19 @@ const getOrders = async () => {
   }
 };
 
+const getOrdersDesign = async () => {
+  try {
+    const response = await axiosClient.get("/admin/orders/design");
+    return response; // Return data if needed
+  } catch (error) {
+    throw error; // Rethrow error or handle it accordingly
+  }
+};
 
-
-
-const updateStatusAdmin = async (data:updateStatusRequest) => {
+const updateStatusAdmin = async (data: updateStatusRequest) => {
   try {
     const response = await axiosClient.put("/admin/orders", {
-      order: data
+      order: data,
     });
     return response; // Return data if needed
   } catch (error) {
@@ -28,4 +35,20 @@ const updateStatusAdmin = async (data:updateStatusRequest) => {
   }
 };
 
-export {  getOrders, updateStatusAdmin};
+const updateStatusDesignAdmin = async (data: updateStatusRequest) => {
+  try {
+    const response = await axiosClient.put("/admin/orders/design", {
+      order: data,
+    });
+    return response; // Return data if needed
+  } catch (error) {
+    throw error; // Rethrow error or handle it accordingly
+  }
+};
+
+export {
+  getOrders,
+  updateStatusAdmin,
+  getOrdersDesign,
+  updateStatusDesignAdmin,
+};

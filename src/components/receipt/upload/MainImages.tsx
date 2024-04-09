@@ -18,6 +18,7 @@ const MainImages: React.FC<MainImges> = ({ mainImage, setMainImage }) => {
   }, []);
 
   const handleChange: UploadProps["onChange"] = (info) => {
+
     if (info.file.status === "uploading") {
       setLoading(true);
       return;

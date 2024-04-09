@@ -6,6 +6,7 @@ const path = {
   PRODUCTS: "/static/products",
   USER: "user",
   ORDER: "order",
+  ORDER_DESIGN: "order/design",
   DISCOUNT: "discount",
   RECEIPT: "receipt",
   DISCOUNT_ADD_PRODUCT: "/discount/:id/add_product",

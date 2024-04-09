@@ -32,7 +32,6 @@ export default function Manager() {
       navigate(path.SIGN_IN);
     }
     dispatch(getUserProfile());
-
   }, [token]);
 
   const handleLogout = () => {
@@ -94,7 +93,17 @@ export default function Manager() {
               {
                 key: path.ORDER,
                 icon: <BellOutlined />,
-                label: "Quản lý hóa đơn",
+                label: "Quản lý đơn hàng",
+                children: [
+                  {
+                    key: path.ORDER,
+                    label: "Đơn hàng",
+                  },
+                  {
+                    key: path.ORDER_DESIGN,
+                    label: "Đơn thiết kế",
+                  },
+                ],
               },
               {
                 key: path.RECEIPT,

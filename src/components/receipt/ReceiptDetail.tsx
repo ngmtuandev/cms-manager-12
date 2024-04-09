@@ -28,7 +28,7 @@ const ReceiptDetail = () => {
   useEffect(() => {
     setData(receiptDetail);
     if (receiptDetail.length <= 0) {
-      navigate("/receipt")
+      navigate("/receipt");
     }
   }, []);
 
@@ -117,7 +117,13 @@ const ReceiptDetail = () => {
           </Link>
         </div>
       </div>
-      <Table columns={columns} dataSource={data} />
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={{
+          pageSize: 4,
+        }}
+      />
       <Modal
         open={openModal}
         title="Lựa chọn"

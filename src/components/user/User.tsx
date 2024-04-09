@@ -141,7 +141,13 @@ const User = () => {
           )}
         </div>
       </div>
-      <Table columns={columns} dataSource={data} />
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={{
+          pageSize: 4,
+        }}
+      />
       <ModalAddUser
         isOpen={isOpenAdd}
         setIsOpen={setIsOpenAdd}
