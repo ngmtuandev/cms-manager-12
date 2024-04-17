@@ -13,10 +13,9 @@ type ModalDetailOrder = {
 };
 
 const ModelCalculate: React.FC<ModalDetailOrder> = React.forwardRef(
-  ({ openOrderDetail, setOpenOrderDetail, orderDetail, flag, setFlag}) => {
+  ({ openOrderDetail, setOpenOrderDetail, orderDetail, flag, setFlag }) => {
     const [price, setPrice] = useState(0);
     const [totalPrice, setTotalPrice] = useState();
-    
 
     useEffect(() => {
       const sum = price * getAllProduct(orderDetail);
@@ -44,13 +43,13 @@ const ModelCalculate: React.FC<ModalDetailOrder> = React.forwardRef(
       try {
         const response = await updateStatusDesignAdmin({
           orderId: orderDetail.id,
-          status: orderDetail.status,
+          status: 'IN_ACCEPT',
           total: totalPrice,
         });
 
         if (response) {
           setOpenOrderDetail(false);
-          setFlag(!flag)
+          setFlag(!flag);
         }
       } catch (error) {
         console.log(error);

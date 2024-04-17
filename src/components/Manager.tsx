@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   MenuFoldOutlined,
@@ -71,11 +71,11 @@ export default function Manager() {
                   },
                   {
                     key: path.STATISTICAL_ORDER,
-                    label: "Thống kê đơn hàng",
+                    label: "Đơn hàng",
                   },
                   {
-                    key: path.STATISTICAL_RECEIPT,
-                    label: "Thống kê nhập hàng",
+                    key: path.STATISTICAL_ORDER_DESIGN,
+                    label: "Đơn thiết kế",
                   },
                 ],
               },

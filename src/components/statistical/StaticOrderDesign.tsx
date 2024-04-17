@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { getStatisticalOrder } from "../../apis/Statistical.Api";
+import {
+  getStatisticalOrder,
+  getStatisticalOrderDesign,
+} from "../../apis/Statistical.Api";
 import { Select } from "antd";
 import BarChart from "./chart/BarChart";
 import LineChart from "./chart/LineChart";
 import { FormatMoney } from "../../helpers/FormatCurency";
 // import faker from 'faker';
 
-const StaticOrder = () => {
+const StaticOrderDesign = () => {
   const [dataModel, setDataModel] = useState<any>([]);
   const [showChart, setShowChart] = useState<string>("Bar");
   const [status, setStatus] = useState<string>("");
   const [label, setLabel] = useState<string>("");
   const [total, setTotal] = useState<string>("");
-  const [color, setColor] = useState<string>("rgba(53, 162, 235, 0.5)");
   const [dataSets, setDataSets] = useState<any>();
+  const [color, setColor] = useState<string>("rgba(53, 162, 235, 0.5)");
 
   useEffect(() => {
     (async () => {
@@ -21,8 +24,10 @@ const StaticOrder = () => {
         const params = {
           status: status,
         };
-        const response: any = await getStatisticalOrder(params);
+        const response: any = await getStatisticalOrderDesign(params);
         if (response) {
+          console.log("..", response);
+
           if (status === "") {
             setDataSets({
               labels: [
@@ -41,7 +46,7 @@ const StaticOrder = () => {
               ],
               datasets: [
                 {
-                  label: "Đơn hàng ",
+                  label: "Tổng đơn hàng",
                   data: response?.dataModel,
                   backgroundColor: "rgba(53, 162, 235, 0.5)",
                   borderColor: "rgba(53, 162, 235, 0.5)",
@@ -57,8 +62,8 @@ const StaticOrder = () => {
           } else {
             setDataSets(null);
           }
-          setDataModel(response?.dataModel);
           setTotal(response?.total);
+          setDataModel(response?.dataModel);
         }
       } catch (error) {
         console.log(error);
@@ -113,7 +118,7 @@ const StaticOrder = () => {
     <>
       <div className="w-full flex">
         <div className="">
-          <p className="font-bold">Loại biểu đồ:</p>
+          <p>Loại biểu đồ:</p>
           <Select
             showSearch
             placeholder="Loại biểu đồ"
@@ -135,7 +140,7 @@ const StaticOrder = () => {
           />
         </div>
         <div className="mx-10">
-          <p className="font-bold">Hiển thị:</p>
+          <p>Hiển thị:</p>
           <Select
             showSearch
             placeholder="Hiển thị đơn hàng"
@@ -169,16 +174,15 @@ const StaticOrder = () => {
           </p>
         </div>
       )}
-
       <div className="w-full h-[28rem]">
         {showChart === "Bar" && (
           <BarChart
             dataModel={dataModel}
             labels={labels}
             label={label}
-            text="Thống kê đơn hàng"
-            color={color}
+            text="Thống kê đơn thiết kế"
             dataSets={dataSets}
+            color={color}
           />
         )}
         {showChart === "Line" && (
@@ -186,9 +190,9 @@ const StaticOrder = () => {
             dataModel={dataModel}
             labels={labels}
             label={label}
-            text="Thống kê đơn hàng"
-            color={color}
+            text="Thống kê đơn thiết kế"
             dataSets={dataSets}
+            color={color}
           />
         )}
       </div>
@@ -196,4 +200,4 @@ const StaticOrder = () => {
   );
 };
 
-export default StaticOrder;
+export default StaticOrderDesign;

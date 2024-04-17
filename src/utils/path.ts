@@ -1,7 +1,7 @@
 const path = {
   STATISTICAL: "",
   STATISTICAL_ORDER: 'static/order',
-  STATISTICAL_RECEIPT: 'static/receipt',
+  STATISTICAL_ORDER_DESIGN: 'static/order_design',
   SIGN_IN: "/signin",
   PRODUCTS: "/static/products",
   USER: "user",

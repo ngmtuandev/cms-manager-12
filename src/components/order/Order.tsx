@@ -55,7 +55,7 @@ const Order = () => {
       render: (_, record: any) => {
         return (
           <Select
-            defaultValue={record.status}
+            defaultValue={getValueStatus(record.status)}
             style={{
               minWidth: 140,
             }}
@@ -201,6 +201,33 @@ const Order = () => {
         return "error";
       case "REFUNDED":
         return "error";
+      default:
+        return "";
+    }
+  };
+
+  const getValueStatus = (status: string) => {
+    switch (status) {
+      case "IN_PROGRESS" || "Đang xử lý":
+        return "Đang xử lý";
+      case "IN_ACCEPT" || "Đang đợi chấp nhận":
+        return "Đang đợi chấp nhận";
+      case "ACCEPTED" || "Đã chấp nhận":
+        return "Đã chấp nhận";
+      case "IN_PENDING" || "Đang vật chuyển":
+        return "Đang vật chuyển";
+      case "IS_SUCCESS" || "Đặt thành công":
+        return "Đặt thành công";
+      case "DELIVERED" || "Đã Vận chuyển":
+        return "Đã Vận chuyển";
+      case "RETURNED" || "Đã trả lại hàng":
+        return "Đã trả lại hàng";
+      case "REFUNDED" || "Đã hoàng tiền":
+        return "Đã hoàng tiền";
+      case "IS_PENDING" || "Đang xử lý":
+        return "Đang đợi xác nhận";
+      case "IS_CANCELLED" || "Đã hủy":
+        return "Đã hủy";
       default:
         return "";
     }

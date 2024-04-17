@@ -59,15 +59,18 @@ const OrderDesign = () => {
       dataIndex: "status",
       key: "status",
       render: (_, record: any) => {
+        console.log(record);
         return (
           <>
             <Tooltip
               title={
-               ( Number(record.total)  <= 0&& record.status === 'IN_PROGRESS') ? "Vui lòng định giá đơn hàng." : ""
+                Number(record.total) <= 0 && record.status === "IN_PROGRESS"
+                  ? "Vui lòng định giá đơn hàng."
+                  : ""
               }
             >
               <Select
-                defaultValue={record.status}
+                defaultValue={getValueStatus(record.status)}
                 style={{
                   minWidth: 140,
                 }}
@@ -107,6 +110,14 @@ const OrderDesign = () => {
         {
           text: "Đã trả lại hàng",
           value: "RETURNED",
+        },
+        {
+          text: "Đang đợi chấp nhận",
+          value: "IN_ACCEPT",
+        },
+        {
+          text: "Đã chấp nhận",
+          value: "ACCEPTED",
         },
         {
           text: "Đã hoàng tiền",
@@ -177,6 +188,7 @@ const OrderDesign = () => {
       const response = await updateStatusDesignAdmin({
         orderId: record.id,
         status: value,
+        total: record.total ? Number(record.total) : 0,
       });
 
       if (response) {
@@ -203,22 +215,31 @@ const OrderDesign = () => {
 
   const getValueStatus = (status: string) => {
     switch (status) {
-      case "IN_PROGRESS":
+      case "IN_PROGRESS" || "Đang xử lý":
         return "Đang xử lý";
-      case "IN_PENDING":
+      case "IN_ACCEPT" || "Đang đợi chấp nhận":
+        return "Đang đợi chấp nhận";
+      case "ACCEPTED" || "Đã chấp nhận":
+        return "Đã chấp nhận";
+      case "IN_PENDING" || "Đang vật chuyển":
         return "Đang vật chuyển";
-      case "IN_SUCCESS":
+      case "IS_SUCCESS" || "Đặt thành công":
         return "Đặt thành công";
-      case "DELIVERED":
+      case "DELIVERED" || "Đã Vận chuyển":
         return "Đã Vận chuyển";
-      case "RETURNED":
+      case "RETURNED" || "Đã trả lại hàng":
         return "Đã trả lại hàng";
-      case "REFUNDED":
+      case "REFUNDED" || "Đã hoàng tiền":
         return "Đã hoàng tiền";
+      case "IS_PENDING" || "Đang xử lý":
+        return "Đang đợi xác nhận";
+      case "IS_CANCELLED" || "Đã hủy":
+        return "Đã hủy";
       default:
         return "";
     }
   };
+
   const handleColorStatus = (status: any): any => {
     switch (status) {
       case "IN_PROGRESS":
@@ -239,12 +260,20 @@ const OrderDesign = () => {
   };
 
   const handleSelectField = (status: string) => {
+    console.log(status);
     switch (status) {
       case "IN_PROGRESS":
         return [
           { value: "IS_PENDING", label: "Đang gửi hàng" },
           { value: "IS_SUCCESS", label: "Thành công" },
           { value: "IS_CANCELLED", label: "Đã hủy đơn hàng" },
+        ];
+      case "IN_ACCEPT":
+        return [{ value: "IS_CANCELLED", label: "Hủy đơn hàng" }];
+      case "ACCEPTED":
+        return [
+          { value: "IS_PENDING", label: "Gửi hàng" },
+          { value: "IS_CANCELLED", label: "Hủy đơn hàng" },
         ];
       case "IS_PENDING":
         return [{ value: "IS_PENDING", label: "Đang gửi hàng" }];
@@ -260,8 +289,6 @@ const OrderDesign = () => {
           { value: "REFUNDED", label: "Đã hoàn tiền" },
         ];
       case "RETURNED":
-        return [{ value: "REFUNDED", label: "Đã hoàn tiền" }];
-      case "REFUNDED":
         return [{ value: "REFUNDED", label: "Đã hoàn tiền" }];
       default:
         return [];

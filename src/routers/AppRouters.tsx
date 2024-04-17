@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Statistical from "../components/statistical/Statistical";
 import StaticOrder from "../components/statistical/StaticOrder";
-import StaticReceipt from "../components/statistical/StaticReceipt";
 import User from "../components/user/User";
 import Discount from "../components/discount/Discount";
 import Order from "../components/order/Order";
@@ -13,13 +12,17 @@ import ReceiptAdd from "../components/receipt/ReceiptAdd";
 import ReceiptDetail from "../components/receipt/ReceiptDetail";
 import DiscountAddProduct from "../components/discount/DiscountAddProduct";
 import OrderDesign from "../components/orderDesign/OrderDesign";
+import StaticOrderDesign from "../components/statistical/StaticOrderDesign";
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Statistical />} />
       <Route path={path.STATISTICAL_ORDER} element={<StaticOrder />} />
-      <Route path={path.STATISTICAL_RECEIPT} element={<StaticReceipt />} />
+      <Route
+        path={path.STATISTICAL_ORDER_DESIGN}
+        element={<StaticOrderDesign />}
+      />
       <Route path={path.USER} element={<User />} />
       <Route path={path.DISCOUNT} element={<Discount />} />
       <Route path={path.ORDER} element={<Order />} />
