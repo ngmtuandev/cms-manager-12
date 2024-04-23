@@ -7,6 +7,7 @@ import { Select } from "antd";
 import BarChart from "./chart/BarChart";
 import LineChart from "./chart/LineChart";
 import { FormatMoney } from "../../helpers/FormatCurency";
+import Loading from "../common/Loading";
 // import faker from 'faker';
 
 const StaticOrderDesign = () => {
@@ -17,17 +18,16 @@ const StaticOrderDesign = () => {
   const [total, setTotal] = useState<string>("");
   const [dataSets, setDataSets] = useState<any>();
   const [color, setColor] = useState<string>("rgba(53, 162, 235, 0.5)");
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     (async () => {
       try {
         const params = {
           status: status,
         };
+        setIsLoading(true);
         const response: any = await getStatisticalOrderDesign(params);
         if (response) {
-          console.log("..", response);
-
           if (status === "") {
             setDataSets({
               labels: [
@@ -65,6 +65,7 @@ const StaticOrderDesign = () => {
           setTotal(response?.total);
           setDataModel(response?.dataModel);
         }
+        setIsLoading(false)
       } catch (error) {
         console.log(error);
       }
@@ -174,7 +175,7 @@ const StaticOrderDesign = () => {
           </p>
         </div>
       )}
-      <div className="w-full h-[28rem]">
+      <div className="w-5/6 h-[26rem]">
         {showChart === "Bar" && (
           <BarChart
             dataModel={dataModel}
@@ -196,6 +197,7 @@ const StaticOrderDesign = () => {
           />
         )}
       </div>
+      <Loading isLoading={isLoading} setIsLoading={setIsLoading}/>
     </>
   );
 };

@@ -59,8 +59,6 @@ const BarChart: React.FC<BarProps> = ({
     ],
   };
 
-  console.log(data);
-
   return <Bar options={options} data={data} />;
 };
 

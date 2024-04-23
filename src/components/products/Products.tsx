@@ -1,13 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { Button, Table } from "antd";
-import type { TableColumnsType } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Input, Space, Table } from "antd";
+import type {
+  InputRef,
+  TableColumnType,
+  TableColumnsType,
+  TableProps,
+} from "antd";
 import { Link, useParams } from "react-router-dom";
 import Loading from "../common/Loading";
-import { getProducts } from "../../apis/ProductsApi";
+import { deleteProduct, getProducts } from "../../apis/ProductsApi";
 import { ShowNotification } from "../../helpers/ShowNotification";
-import { addProductToDiscount } from "../../apis/DiscountApi";
+
 import ModelProductOptions from "./ModelProductOptions";
 import { FormatMoney } from "../../helpers/FormatCurency";
+import {
+  AppstoreAddOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import ModelProductUpdate from "./ModelProductUpdate";
+import { FilterDropdownProps } from "antd/es/table/interface";
 
 interface DataType {
   key: React.Key;
@@ -18,13 +31,97 @@ interface DataType {
   options: any;
 }
 
+type DataIndex = keyof DataType;
 const Product = () => {
   const { id } = useParams();
 
   const [data, setData] = useState<DataType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [openOptions, setOpenOptions] = useState<boolean>(false);
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  const [product, setProductInfo] = useState<any>();
   const [options, setOptions] = useState<any>();
+  const [changeFlag, setChangeFlag] = useState<boolean>(true);
+
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef<InputRef>(null);
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: FilterDropdownProps["confirm"],
+    dataIndex: DataIndex
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  const getColumnSearchProps = (
+    dataIndex: DataIndex
+  ): TableColumnType<DataType> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`tìm kiếm sản phẩm`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Tìm
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            đặt lại
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => (searchedColumn === dataIndex ? <>{text}</> : text),
+  });
 
   useEffect(() => {
     try {
@@ -47,13 +144,33 @@ const Product = () => {
         }
       })();
     } catch (error) {}
-  }, []);
+  }, [changeFlag]);
+  console.log(data);
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await deleteProduct(id);
+
+      if (response) {
+        ShowNotification({
+          type: "success",
+          message: `Thành công`,
+          description: `Xóa thành công!`,
+        });
+        setChangeFlag(!changeFlag);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns: TableColumnsType<DataType> = [
     {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
+      width: "30%",
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Giá hiện tại",
@@ -76,23 +193,45 @@ const Product = () => {
       ),
     },
     {
-      title: "Các lựa chọn",
-      dataIndex: "mainImage",
-      key: "mainImage",
+      title: "Thao tác",
+      dataIndex: "",
+      key: "",
       render: (_, record: any) => (
-        <Button
-          type="primary"
-          onClick={() => {
-            setOpenOptions(true);
-            console.log(record.options);
-            setOptions(record.options);
-          }}
-        >
-          Xem thêm lựa chọn
-        </Button>
+        <Space size="middle">
+          <EditOutlined
+            onClick={() => {
+              setIsUpdate(true);
+              setProductInfo(record);
+            }}
+            className="text-xl cursor-pointer hover:text-blue-500"
+          />
+          <DeleteOutlined
+            onClick={() => {
+              handleDelete(Number(record.id));
+            }}
+            className="text-xl cursor-pointer hover:text-blue-500"
+          />
+          <AppstoreAddOutlined
+            onClick={() => {
+              setOpenOptions(true);
+              setOptions(record.options);
+              setProductInfo(record);
+            }}
+            className="text-xl cursor-pointer hover:text-blue-500"
+          />
+        </Space>
       ),
     },
   ];
+
+  const onChange: TableProps<DataType>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
 
   return (
     <div>
@@ -103,11 +242,21 @@ const Product = () => {
         pagination={{
           pageSize: 2,
         }}
+        onChange={onChange}
       />
       <ModelProductOptions
+        productInfo={product}
         openOptions={openOptions}
         setOpenOptions={setOpenOptions}
         options={options}
+      />
+      <ModelProductUpdate
+        product={product}
+        isOpen={isUpdate}
+        setIsOpen={setIsUpdate}
+        isChange={changeFlag}
+        setIsChange={setChangeFlag}
+        title="Chỉnh sửa thông tin sản phẩm"
       />
       <Loading
         isLoading={isLoading}

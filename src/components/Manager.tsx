@@ -15,12 +15,13 @@ import AppRoutes from "../routers/AppRouters";
 import { useNavigate } from "react-router-dom";
 import path from "../utils/path";
 import { getUserProfile } from "../store/slice/user";
-import { useAppDispatch } from "../hooks/userSelecter";
+import { useAppDispatch, useAppSelector } from "../hooks/userSelecter";
 const { Header, Sider, Content } = Layout;
 
 export default function Manager() {
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.role);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -39,6 +40,7 @@ export default function Manager() {
     navigate(path.SIGN_IN);
   };
 
+
   return (
     <div className="w-full h-lvh">
       <Layout className="min-h-lvh">
@@ -52,7 +54,6 @@ export default function Manager() {
               if (key === "signout") {
                 return;
               } else {
-                console.log(key);
                 navigate(key);
               }
             }}
@@ -80,6 +81,7 @@ export default function Manager() {
                 ],
               },
               {
+                
                 key: path.USER,
                 icon: <UserOutlined />,
                 label: "Quản lý user",
@@ -105,7 +107,7 @@ export default function Manager() {
                   },
                 ],
               },
-              {
+              user === "ADMIN" ? {
                 key: path.RECEIPT,
                 icon: <CopyOutlined />,
                 label: "Quản lý nhập hàng",
@@ -119,17 +121,17 @@ export default function Manager() {
                     label: "Nhập hàng",
                   },
                 ],
-              },
+              }: null,
               {
                 key: path.DISCOUNT,
                 icon: <PercentageOutlined />,
                 label: "Quản lý giảm giá",
               },
-              {
+              user === "ADMIN" ? {
                 key: path.PRODUCTS,
                 icon: <ProductOutlined />,
                 label: "Quản lý sản phẩm",
-              },
+              }: null,
             ]}
           />
         </Sider>

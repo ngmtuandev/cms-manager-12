@@ -32,7 +32,7 @@ const Statistical = () => {
       }
 
       if (items) {
-        console.log(items)
+        console.log(items);
         setDataSets({
           labels: items?.items,
           datasets: [
@@ -127,7 +127,6 @@ const Statistical = () => {
               ]}
             />
           </div>
-
           <LineChart dataSets={dataSets} />
         </div>
       </div>
