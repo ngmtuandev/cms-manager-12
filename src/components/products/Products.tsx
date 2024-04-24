@@ -145,7 +145,6 @@ const Product = () => {
       })();
     } catch (error) {}
   }, [changeFlag]);
-  console.log(data);
 
   const handleDelete = async (id: number) => {
     try {

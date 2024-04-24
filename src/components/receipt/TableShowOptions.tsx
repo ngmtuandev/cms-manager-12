@@ -27,6 +27,11 @@ const TableShowOptions: React.FC<TableShowOptions> = ({ data }) => {
       title: "Mã màu",
       dataIndex: "colorCode",
       key: "colorCode",
+      render: (_, record: any) => {
+        return (
+          <>{record?.codeColor}</>
+        )
+      }
     },
     {
       title: "Kích thước",

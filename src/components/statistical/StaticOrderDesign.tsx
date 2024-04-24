@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   getStatisticalOrder,
   getStatisticalOrderDesign,
+  getStatisticalOrderDesignSelling,
 } from "../../apis/Statistical.Api";
 import { Select } from "antd";
 import BarChart from "./chart/BarChart";
@@ -14,78 +15,105 @@ const StaticOrderDesign = () => {
   const [dataModel, setDataModel] = useState<any>([]);
   const [showChart, setShowChart] = useState<string>("Bar");
   const [status, setStatus] = useState<string>("");
-  const [label, setLabel] = useState<string>("");
+  const [label, setLabel] = useState<string>("order");
   const [total, setTotal] = useState<string>("");
   const [dataSets, setDataSets] = useState<any>();
   const [color, setColor] = useState<string>("rgba(53, 162, 235, 0.5)");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   useEffect(() => {
     (async () => {
       try {
-        const params = {
-          status: status,
-        };
         setIsLoading(true);
-        const response: any = await getStatisticalOrderDesign(params);
-        if (response) {
-          if (status === "") {
-            setDataSets({
-              labels: [
-                "Tháng 1",
-                "Tháng 2",
-                "Tháng 3",
-                "Tháng 4",
-                "Tháng 5",
-                "Tháng 6",
-                "Tháng 7",
-                "Tháng 8",
-                "Tháng 9",
-                "Tháng 10",
-                "Tháng 11",
-                "Tháng 12",
-              ],
-              datasets: [
-                {
-                  label: "Tổng đơn hàng",
-                  data: response?.dataModel,
-                  backgroundColor: "rgba(53, 162, 235, 0.5)",
-                  borderColor: "rgba(53, 162, 235, 0.5)",
-                },
-                {
-                  label: "Đơn hàng đã hủy",
-                  data: response?.dataModelCancel,
-                  borderColor: "rgb(255, 99, 132)",
-                  backgroundColor: "rgb(255, 99, 132)",
-                },
-              ],
-            });
-          } else {
-            setDataSets(null);
-          }
-          setTotal(response?.total);
-          setDataModel(response?.dataModel);
+        let response: any;
+
+        if (label === "order") {
+          response = await getStatisticalOrderDesign();
+          setDataSets({
+            labels: [
+              "Tháng 1",
+              "Tháng 2",
+              "Tháng 3",
+              "Tháng 4",
+              "Tháng 5",
+              "Tháng 6",
+              "Tháng 7",
+              "Tháng 8",
+              "Tháng 9",
+              "Tháng 10",
+              "Tháng 11",
+              "Tháng 12",
+            ],
+            datasets: [
+              {
+                label: "Đơn hàng ",
+                data: response?.dataModel,
+                backgroundColor: "rgba(53, 162, 235, 0.5)",
+                borderColor: "rgba(53, 162, 235, 0.5)",
+              },
+              {
+                label: "Đơn hàng đã hủy",
+                data: response?.dataModelCancel,
+                borderColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgb(255, 99, 132)",
+              },
+            ],
+          });
+        } else if (label === "selling") {
+          response = await getStatisticalOrderDesignSelling();
+          setDataSets({
+            labels: [
+              "Tháng 1",
+              "Tháng 2",
+              "Tháng 3",
+              "Tháng 4",
+              "Tháng 5",
+              "Tháng 6",
+              "Tháng 7",
+              "Tháng 8",
+              "Tháng 9",
+              "Tháng 10",
+              "Tháng 11",
+              "Tháng 12",
+            ],
+            datasets: [
+              {
+                label: "Đơn hàng ",
+                data: response?.dataModel,
+                backgroundColor: "rgba(53, 162, 235, 0.5)",
+                borderColor: "rgba(53, 162, 235, 0.5)",
+              },
+              {
+                label: "Đơn hàng đã hủy",
+                data: response?.dataModelCancel,
+                borderColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgb(255, 99, 132)",
+              },
+            ],
+          });
         }
-        setIsLoading(false)
+
+        setTotal(response?.total);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
     })();
   }, [status]);
-
   const onChangeChart = (value: string) => {
     setShowChart(value);
   };
 
   const onChangeFilter = (value: string) => {
     setStatus(value);
-    if (value === "IS_CANCELLED") {
-      setLabel("Đơn hàng đã hủy");
+    if (value === "order") {
+      setLabel("order");
       setColor("rgb(255, 99, 132)");
-    } else if (value === "IS_SUCCESS") {
-      setLabel("Đơn hàng đã đặt");
+    } else if (value === "selling") {
+      setLabel("selling");
       setColor("rgba(53, 162, 235, 0.5)");
     } else if (value === "") {
-      setLabel("Tổng đơn hàng");
+      setLabel("order");
       setColor("rgba(53, 162, 235, 0.5)");
     }
   };
@@ -152,16 +180,12 @@ const StaticOrderDesign = () => {
             filterOption={filterOption}
             options={[
               {
-                value: "",
-                label: "Tất cả",
+                value: "order",
+                label: "Theo đơn hàng",
               },
               {
-                value: "IS_CANCELLED",
-                label: "Đã hủy",
-              },
-              {
-                value: "IS_SUCCESS",
-                label: "Đã đặt",
+                value: "selling",
+                label: "Theo doanh thu",
               },
             ]}
           />
@@ -197,7 +221,7 @@ const StaticOrderDesign = () => {
           />
         )}
       </div>
-      <Loading isLoading={isLoading} setIsLoading={setIsLoading}/>
+      <Loading isLoading={isLoading} setIsLoading={setIsLoading} />
     </>
   );
 };
