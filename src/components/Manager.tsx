@@ -40,7 +40,6 @@ export default function Manager() {
     navigate(path.SIGN_IN);
   };
 
-
   return (
     <div className="w-full h-lvh">
       <Layout className="min-h-lvh">
@@ -81,7 +80,6 @@ export default function Manager() {
                 ],
               },
               {
-                
                 key: path.USER,
                 icon: <UserOutlined />,
                 label: "Quản lý user",
@@ -107,31 +105,35 @@ export default function Manager() {
                   },
                 ],
               },
-              user === "ADMIN" ? {
-                key: path.RECEIPT,
-                icon: <CopyOutlined />,
-                label: "Quản lý nhập hàng",
-                children: [
-                  {
+              user === "ADMIN"
+                ? {
                     key: path.RECEIPT,
-                    label: "Đơn Nhập hàng",
-                  },
-                  {
-                    key: path.RECEIPT_ADD,
-                    label: "Nhập hàng",
-                  },
-                ],
-              }: null,
+                    icon: <CopyOutlined />,
+                    label: "Quản lý nhập hàng",
+                    children: [
+                      {
+                        key: path.RECEIPT,
+                        label: "Đơn Nhập hàng",
+                      },
+                      {
+                        key: path.RECEIPT_ADD,
+                        label: "Nhập hàng",
+                      },
+                    ],
+                  }
+                : null,
               {
                 key: path.DISCOUNT,
                 icon: <PercentageOutlined />,
                 label: "Quản lý giảm giá",
               },
-              user === "ADMIN" ? {
-                key: path.PRODUCTS,
-                icon: <ProductOutlined />,
-                label: "Quản lý sản phẩm",
-              }: null,
+              user === "ADMIN"
+                ? {
+                    key: path.PRODUCTS,
+                    icon: <ProductOutlined />,
+                    label: "Quản lý sản phẩm",
+                  }
+                : null,
             ]}
           />
         </Sider>

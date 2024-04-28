@@ -9,18 +9,27 @@ import BarChart from "./chart/BarChart";
 import LineChart from "./chart/LineChart";
 import { FormatMoney } from "../../helpers/FormatCurency";
 import Loading from "../common/Loading";
+import { DatePicker, Space } from "antd";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 // import faker from 'faker';
+const dateFormat = "YYYY/MM/DD";
+const { RangePicker } = DatePicker;
+dayjs.extend(utc);
 
 const StaticOrderDesign = () => {
   const [dataModel, setDataModel] = useState<any>([]);
   const [showChart, setShowChart] = useState<string>("Bar");
   const [status, setStatus] = useState<string>("");
   const [label, setLabel] = useState<string>("order");
-  const [total, setTotal] = useState<string>("");
+  const [total, setTotal] = useState<number>(0);
   const [dataSets, setDataSets] = useState<any>();
   const [color, setColor] = useState<string>("rgba(53, 162, 235, 0.5)");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [params, setParams] = useState({
+    dateStart: "",
+    dateEnd: "",
+  });
   useEffect(() => {
     (async () => {
       try {
@@ -28,80 +37,54 @@ const StaticOrderDesign = () => {
         let response: any;
 
         if (label === "order") {
-          response = await getStatisticalOrderDesign();
+          response = await getStatisticalOrderDesign(params);
+          const labelExtract = extractLabels(response);
+          const dataExtract = extractData(response);
           setDataSets({
-            labels: [
-              "Tháng 1",
-              "Tháng 2",
-              "Tháng 3",
-              "Tháng 4",
-              "Tháng 5",
-              "Tháng 6",
-              "Tháng 7",
-              "Tháng 8",
-              "Tháng 9",
-              "Tháng 10",
-              "Tháng 11",
-              "Tháng 12",
-            ],
+            labels: labelExtract,
             datasets: [
               {
                 label: "Đơn hàng ",
-                data: response?.dataModel,
+                data: dataExtract,
                 backgroundColor: "rgba(53, 162, 235, 0.5)",
                 borderColor: "rgba(53, 162, 235, 0.5)",
               },
-              {
-                label: "Đơn hàng đã hủy",
-                data: response?.dataModelCancel,
-                borderColor: "rgb(255, 99, 132)",
-                backgroundColor: "rgb(255, 99, 132)",
-              },
             ],
           });
+          setTotal(0);
         } else if (label === "selling") {
-          response = await getStatisticalOrderDesignSelling();
+          response = await getStatisticalOrderDesignSelling(params);
+          const labelExtract = extractLabels(response[0]);
+          const dataExtract = extractData(response[0]);
           setDataSets({
-            labels: [
-              "Tháng 1",
-              "Tháng 2",
-              "Tháng 3",
-              "Tháng 4",
-              "Tháng 5",
-              "Tháng 6",
-              "Tháng 7",
-              "Tháng 8",
-              "Tháng 9",
-              "Tháng 10",
-              "Tháng 11",
-              "Tháng 12",
-            ],
+            labels: labelExtract,
             datasets: [
               {
                 label: "Đơn hàng ",
-                data: response?.dataModel,
+                data: dataExtract,
                 backgroundColor: "rgba(53, 162, 235, 0.5)",
                 borderColor: "rgba(53, 162, 235, 0.5)",
               },
-              {
-                label: "Đơn hàng đã hủy",
-                data: response?.dataModelCancel,
-                borderColor: "rgb(255, 99, 132)",
-                backgroundColor: "rgb(255, 99, 132)",
-              },
             ],
           });
+          setTotal(response[1]);
         }
-
-        setTotal(response?.total);
         setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
     })();
-  }, [status]);
+  }, [status, params]);
   const onChangeChart = (value: string) => {
     setShowChart(value);
+  };
+
+  const extractLabels = (response: any) => {
+    return response.map((label: any) => label.month);
+  };
+
+  const extractData = (response: any) => {
+    return response.map((label: any) => label.count);
   };
 
   const onChangeFilter = (value: string) => {
@@ -128,21 +111,8 @@ const StaticOrderDesign = () => {
     option?: { label: string; value: string }
   ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
-  const labels = [
-    "Tháng 1",
-    "Tháng 2",
-    "Tháng 3",
-    "Tháng 4",
-    "Tháng 5",
-    "Tháng 6",
-    "Tháng 7",
-    "Tháng 8",
-    "Tháng 9",
-    "Tháng 10",
-    "Tháng 11",
-    "Tháng 12",
-  ];
-
+  const labels: any = [];
+  console.log(total);
   return (
     <>
       <div className="w-full flex">
@@ -190,8 +160,41 @@ const StaticOrderDesign = () => {
             ]}
           />
         </div>
+        <div className="mx-10">
+          <p className="font-bold">Theo thời gian:</p>
+          <RangePicker
+            format={dateFormat}
+            onChange={(value, dateString) => {
+              console.log("Formatted Selected Time: ", dateString);
+
+              const dateStart = dateString[0];
+              if (dateStart !== "" && dateStart !== "") {
+                const coverDateStart = dayjs(dateStart, dateFormat);
+                const formattedDateStart = coverDateStart
+                  .utc()
+                  .subtract(1, "day")
+                  .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+                const dateEnd = dateString[1];
+                const coverDateEnd = dayjs(dateEnd, dateFormat);
+                const formattedDateEnd = coverDateEnd
+                  .utc()
+                  .subtract(1, "day")
+                  .format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+                setParams({
+                  dateStart: formattedDateStart,
+                  dateEnd: formattedDateEnd,
+                });
+              } else {
+                setParams({
+                  dateStart: "",
+                  dateEnd: "",
+                });
+              }
+            }}
+          />
+        </div>
       </div>
-      {status !== "IS_CANCELLED" && (
+      {total !== 0 && (
         <div className="w-full my-4">
           <p className="font-bold">
             Tổng thu nhập:{" "}
@@ -199,6 +202,7 @@ const StaticOrderDesign = () => {
           </p>
         </div>
       )}
+
       <div className="w-5/6 h-[26rem]">
         {showChart === "Bar" && (
           <BarChart

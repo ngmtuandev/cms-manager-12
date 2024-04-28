@@ -27,37 +27,42 @@ const getOutOfStock = async () => {
   }
 };
 
-const getStatisticalOrder = async () => {
+const getStatisticalOrder = async (params?: any) => {
   try {
-    const response = await axiosClient.get("/statistical/orders");
+    const response = await axiosClient.get("/statistical/orders", { params });
     return response; // Return data if needed
   } catch (error) {
     throw error; // Rethrow error or handle it accordingly
   }
 };
 
-const getStatisticalOrderSelling = async () => {
+const getStatisticalOrderSelling = async (params?: any) => {
   try {
-    const response = await axiosClient.get("/statistical/orders/selling");
+    const response = await axiosClient.get("/statistical/orders/selling", {
+      params,
+    });
     return response; // Return data if needed
   } catch (error) {
     throw error; // Rethrow error or handle it accordingly
   }
 };
 
-const getStatisticalOrderDesign = async () => {
+const getStatisticalOrderDesign = async (params?: any) => {
   try {
-    const response = await axiosClient.get("/statistical/orders-design");
+    const response = await axiosClient.get("/statistical/orders-design", {
+      params,
+    });
     return response; // Return data if needed
   } catch (error) {
     throw error; // Rethrow error or handle it accordingly
   }
 };
 
-const getStatisticalOrderDesignSelling = async () => {
+const getStatisticalOrderDesignSelling = async (params?: any) => {
   try {
     const response = await axiosClient.get(
-      "/statistical/orders-design/selling"
+      "/statistical/orders-design/selling",
+      { params }
     );
     return response; // Return data if needed
   } catch (error) {
@@ -72,5 +77,5 @@ export {
   getStatisticalOrderSelling,
   getTopSelling,
   getOutOfStock,
-  getStatisticalOrderDesignSelling
+  getStatisticalOrderDesignSelling,
 };
