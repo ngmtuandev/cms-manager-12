@@ -1,7 +1,6 @@
 import { Button, Card, Input, Modal } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FormatMoney } from "../../helpers/FormatCurency";
-import { useReactToPrint } from "react-to-print";
 import { updateStatusDesignAdmin } from "../../apis/OrderApis";
 
 type ModalDetailOrder = {
@@ -15,7 +14,7 @@ type ModalDetailOrder = {
 const ModelCalculate: React.FC<ModalDetailOrder> = React.forwardRef(
   ({ openOrderDetail, setOpenOrderDetail, orderDetail, flag, setFlag }) => {
     const [price, setPrice] = useState(0);
-    const [totalPrice, setTotalPrice] = useState();
+    const [totalPrice, setTotalPrice] = useState<number>();
 
     useEffect(() => {
       const sum = price * getAllProduct(orderDetail);

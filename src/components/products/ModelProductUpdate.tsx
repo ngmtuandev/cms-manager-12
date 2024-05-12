@@ -1,17 +1,10 @@
-import { Card, Modal, Select } from "antd";
+import {  Modal } from "antd";
 import React, { useEffect, useState } from "react";
-import { getFormatPrice } from "../../utils/formatPrice";
-import { FormatMoney } from "../../helpers/FormatCurency";
-
-import { Button, Checkbox, Form, type FormProps, Input } from "antd";
-import { Option } from "antd/es/mentions";
-
-import { addUser, updateUser } from "../../apis/UserApis";
+import { Button, Form, type FormProps, Input } from "antd";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
 import TextArea from "antd/es/input/TextArea";
-import MainImages from "../receipt/upload/MainImages";
 import { updateProduct } from "../../apis/ProductsApi";
 
 type FieldType = {
@@ -36,12 +29,6 @@ interface modelUpdateProduct {
   setIsChange?: any;
 }
 
-const normFile = (e: any) => {
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e?.fileList;
-};
 
 const ModelProductUpdate: React.FC<modelUpdateProduct> = ({
   isOpen,
@@ -64,6 +51,7 @@ const ModelProductUpdate: React.FC<modelUpdateProduct> = ({
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     try {
+      console.log(mainImage)
       let response = await updateProduct(Number(product.id), values);
 
       if (response) {

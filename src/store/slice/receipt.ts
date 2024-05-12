@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 // import { getProfile, updateProductInCart } from "../../apis/User.api";
 // import { updateProductReq } from "../../types/TCart";
 
@@ -18,7 +18,7 @@ const receiptSlide = createSlice({
       state.receiptDetail = action.payload;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: () => {
     // // get profile
     // builder.addCase(getUserProfile.fulfilled, (state, action: any) => {
     //   // Update the state with the fetched user data

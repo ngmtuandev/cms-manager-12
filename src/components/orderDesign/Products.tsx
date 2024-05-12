@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "antd";
 import type { TableColumnsType } from "antd";
-import { Link, useParams } from "react-router-dom";
 import Loading from "../common/Loading";
 import { getProducts } from "../../apis/ProductsApi";
-import { ShowNotification } from "../../helpers/ShowNotification";
-import { addProductToDiscount } from "../../apis/DiscountApi";
-import ModelProductOptions from "./ModelProductOptions";
+import ModelProductOptions from "../products/ModelProductOptions";
 import { FormatMoney } from "../../helpers/FormatCurency";
 
 interface DataType {
@@ -19,8 +16,6 @@ interface DataType {
 }
 
 const Product = () => {
-  const { id } = useParams();
-
   const [data, setData] = useState<DataType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [openOptions, setOpenOptions] = useState<boolean>(false);

@@ -66,7 +66,7 @@ const userSlice = createSlice({
     });
     builder.addCase(getUserProfile.rejected, (state, action) => {
       // Handle the case when fetching user data fails
-      console.error("Error fetching user data:", action.payload);
+      console.error("Error fetching user data:", action.payload, state);
     });
   },
 });

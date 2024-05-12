@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import {
   getAllStatistical,
@@ -8,7 +8,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { FormatMoney } from "../../helpers/FormatCurency";
 import { Select } from "antd";
 import LineChart from "./chart/LineChart";
 
@@ -54,6 +53,7 @@ const Statistical = () => {
 
   const handleChartClick = (event: any, elements: any) => {
     if (elements.length > 0) {
+      console.log(event)
       const clickedElementIndex = elements[0].index;
       const clickedLabel = data.labels[clickedElementIndex];
       // Perform actions based on the clicked label

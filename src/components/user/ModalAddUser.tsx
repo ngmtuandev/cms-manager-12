@@ -1,6 +1,6 @@
 import { Modal, Select } from "antd";
 
-import { Button, Checkbox, Form, type FormProps, Input } from "antd";
+import { Button, Form, type FormProps, Input } from "antd";
 import { Option } from "antd/es/mentions";
 import React, { useEffect } from "react";
 import { addUser, updateUser } from "../../apis/UserApis";

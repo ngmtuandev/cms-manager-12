@@ -1,5 +1,5 @@
 import React from "react";
-import { Carousel, Space, Table, Tag } from "antd";
+import { Carousel, Table } from "antd";
 import type { TableProps } from "antd";
 import { getSize } from "../../helpers/getSize";
 

@@ -1,26 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getStatisticalOrder,
   getStatisticalOrderSelling,
 } from "../../apis/Statistical.Api";
-import { DatePickerProps, Select } from "antd";
+import { Select } from "antd";
 import BarChart from "./chart/BarChart";
 import LineChart from "./chart/LineChart";
 import { FormatMoney } from "../../helpers/FormatCurency";
 import Loading from "../common/Loading";
-
-import { DatePicker, Space } from "antd";
+import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { RangePickerProps } from "antd/es/date-picker";
 // import faker from 'faker';
-
 const dateFormat = "YYYY/MM/DD";
 const { RangePicker } = DatePicker;
 dayjs.extend(utc);
 
 const StaticOrder = () => {
-  const [dataModel, setDataModel] = useState<any>([]);
   const [showChart, setShowChart] = useState<string>("Bar");
   const [status, setStatus] = useState<string>("");
   const [label, setLabel] = useState<string>("order");
@@ -170,8 +166,7 @@ const StaticOrder = () => {
           <RangePicker
             format={dateFormat}
             onChange={(value, dateString) => {
-              console.log("Formatted Selected Time: ", dateString);
-
+              console.log("Formatted Selected Time: ", dateString, value);
               const dateStart = dateString[0];
               if (dateStart !== "" && dateStart !== "") {
                 const coverDateStart = dayjs(dateStart, dateFormat);
@@ -210,7 +205,6 @@ const StaticOrder = () => {
       <div className="w-5/6 h-[26rem]">
         {showChart === "Bar" && (
           <BarChart
-            dataModel={dataModel}
             labels={labels}
             label={label}
             text="Thống kê đơn hàng"
@@ -220,7 +214,6 @@ const StaticOrder = () => {
         )}
         {showChart === "Line" && (
           <LineChart
-            dataModel={dataModel}
             labels={labels}
             label={label}
             text="Thống kê đơn hàng"

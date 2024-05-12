@@ -62,7 +62,7 @@ const columns: TableColumnsType<DataType> = [
         value: "Quần jeans",
       },
     ],
-    onFilter: (value: string, record): any =>
+    onFilter: (value: any, record:any) =>
       record.category.indexOf(value) === 0,
   },
   {

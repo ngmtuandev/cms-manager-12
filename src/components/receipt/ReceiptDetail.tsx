@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Button, Carousel, Modal, Space, Spin, Table } from "antd";
+import { useEffect, useState } from "react";
+import { Button, Carousel, Modal, Space, Table } from "antd";
 import type { TableProps } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import path from "../../utils/path";
-import { useAppDispatch, useAppSelector } from "../../hooks/userSelecter";
+import { useAppSelector } from "../../hooks/userSelecter";
 
 import { getSize } from "../../helpers/getSize";
 import { FormatMoney } from "../../helpers/FormatCurency";
@@ -22,7 +22,6 @@ const ReceiptDetail = () => {
   const [openModal, setOpenModal] = useState(false);
   const [dataModal, setDataModal] = useState([]);
   const [data, setData] = useState<DataType[]>([]);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -89,9 +88,6 @@ const ReceiptDetail = () => {
     },
   ];
 
-  const showModal = () => {
-    setOpenModal(true);
-  };
 
   const handleOk = () => {
     setOpenModal(false);

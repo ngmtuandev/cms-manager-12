@@ -1,9 +1,6 @@
-import { DatePicker, DatePickerProps, Modal, Select } from "antd";
-
-import { Button, Checkbox, Form, type FormProps, Input } from "antd";
-import { Option } from "antd/es/mentions";
+import { DatePicker, Modal } from "antd";
+import { Button, Form, type FormProps, Input } from "antd";
 import React, { useEffect, useState } from "react";
-import { addUser, updateUser } from "../../apis/UserApis";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import { useNavigate } from "react-router-dom";
 import path from "../../utils/path";
@@ -145,6 +142,7 @@ const ModalDiscount: React.FC<ModalAddUserProps> = ({
     value: RangePickerProps["value"],
     dateString: [string, string] | string
   ) => {
+    console.log(value);
     setDateStart(moment(dateString[0], "DD-MM-YYYY").toISOString());
     setDateEnd(moment(dateString[1], "DD-MM-YYYY").toISOString());
   };
@@ -203,10 +201,7 @@ const ModalDiscount: React.FC<ModalAddUserProps> = ({
             <RangePicker format="DD-MM-YYYY" onChange={onChange} />
           )}
         </Form.Item>
-        <Form.Item
-          label="Hình ảnh banner"
-
-        >
+        <Form.Item label="Hình ảnh banner">
           <MainImages mainImage={image} setMainImage={setImage} />
         </Form.Item>
         <Form.Item

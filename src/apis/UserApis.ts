@@ -1,5 +1,5 @@
 import axiosClient from "../libs/axios-client";
-import { SigUpReq, SignRes } from "../types/TAuth";
+import {  SignRes } from "../types/TAuth";
 
 const signIn = async (data: SignRes) => {
   try {

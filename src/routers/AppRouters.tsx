@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Route, Routes } from "react-router-dom";
 import Statistical from "../components/statistical/Statistical";
 import StaticOrder from "../components/statistical/StaticOrder";

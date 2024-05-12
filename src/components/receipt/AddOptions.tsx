@@ -1,7 +1,6 @@
 import React, { useEffect, useState, memo } from "react";
 import {
   Button,
-  Checkbox,
   Form,
   type FormProps,
   Input,
@@ -58,7 +57,10 @@ const AddOptions: React.FC<AddOptionsProps> = memo(({ options, setOption }) => {
       })();
     } catch (error) {
       console.log(error);
+      console.log(fileList);
+      console.log(formatHex);
     }
+    
   }, []);
 
   const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Route, Router, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import Manager from "./components/Manager";
 import path from "./utils/path";

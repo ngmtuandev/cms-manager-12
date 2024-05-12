@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,7 +21,7 @@ ChartJS.register(
 
 export type BarProps = {
   labels: string[];
-  dataModel: any[];
+  dataModel?: any[];
   dataSets?: any;
   label?: string;
   text?: string;

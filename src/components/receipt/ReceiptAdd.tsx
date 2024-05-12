@@ -1,33 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
 import {
   Button,
-  Cascader,
-  Checkbox,
-  ColorPicker,
-  DatePicker,
   Form,
   FormProps,
   Input,
-  InputNumber,
-  Radio,
   Select,
-  Slider,
-  Switch,
-  TreeSelect,
-  Upload,
 } from "antd";
 import { getShops } from "../../apis/ShopApis";
 import { getCategories } from "../../apis/Categories";
 import Loading from "../common/Loading";
-import type { GetProp, UploadFile, UploadProps } from "antd";
 import MainImages from "./upload/MainImages";
 import AddOptions from "./AddOptions";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import TableShowOptions from "./TableShowOptions";
 import { createReceipts } from "../../apis/ReceiptsApis";
-import { useForm } from "antd/es/form/Form";
-const { TextArea } = Input;
+
 
 type images = {
   filePath?: string;
@@ -69,7 +56,6 @@ const normFile = (e: any) => {
 
 const ReceiptAdd = () => {
   const [form] = Form.useForm();
-  const [orderDetail, setOrderDetail] = useState<ReceiptDetail[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [shops, setShop] = useState();
   const [selectShopId, setSelectShopId] = useState<any>();

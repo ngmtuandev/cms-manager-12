@@ -1,10 +1,9 @@
 import { Card, Modal } from "antd";
 import React, { useState } from "react";
-import { getFormatPrice } from "../../utils/formatPrice";
 import { FormatMoney } from "../../helpers/FormatCurency";
 
 type ModelProductOptionsProps = {
-  productInfo: any;
+  productInfo?: any;
   openOptions: boolean;
   setOpenOptions: any;
   options: any;

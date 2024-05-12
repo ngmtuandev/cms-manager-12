@@ -4,12 +4,12 @@ const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
 });
 
-console.log(import.meta.env.VITE_BASE_URL);
 axiosClient.interceptors.request.use(
   function (config) {
-    const tokenUser = JSON.parse(localStorage.getItem("token"));
-    if (tokenUser) {
-      config.headers.Authorization = `bearer ${tokenUser?.access_token.trim()}`;
+    const tokenString = localStorage.getItem("token");
+    if (tokenString !== null) {
+      const tokenUser = JSON.parse(tokenString);
+      config.headers.Authorization = `bearer ${tokenUser.access_token.trim()}`;
     }
     return config;
   },
@@ -27,11 +27,11 @@ axiosClient.interceptors.response.use(
   async function (error) {
     let { response } = error;
 
-    if (response.status === 401 || response.status === 403) {
+    if (response && (response.status === 401 || response.status === 403)) {
       localStorage.removeItem("token");
     }
 
-    // if (response.data.message === "Forbidden") {
+    // if (response?.data.message === "Forbidden") {
     //   localStorage.removeItem("token");
     // }
 

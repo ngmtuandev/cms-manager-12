@@ -1,14 +1,10 @@
-import { useEffect, useState, useRef } from "react";
-import { Button, Card, Modal, Select, Space, Table, Tooltip } from "antd";
+import { useEffect, useState } from "react";
+import { Button, Select, Space, Table, Tooltip } from "antd";
 import type { TableProps } from "antd";
 import {
-  getOrders,
   getOrdersDesign,
-  updateStatusAdmin,
   updateStatusDesignAdmin,
-  updateStatusRequest,
 } from "../../apis/OrderApis";
-import { getFormatPrice } from "../../utils/formatPrice";
 import Loading from "../common/Loading";
 import { ShowNotification } from "../../helpers/ShowNotification";
 import { FormatMoney } from "../../helpers/FormatCurency";
@@ -124,7 +120,7 @@ const OrderDesign = () => {
           value: "REFUNDED",
         },
       ],
-      onFilter: (value: string, record): boolean => {
+      onFilter: (value: any, record): boolean => {
         console.log(value);
         return record.status.indexOf(value) === 0;
       },

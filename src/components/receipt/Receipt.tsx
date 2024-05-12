@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Card, Modal, Space, Table, Tag } from "antd";
+import { useEffect, useState } from "react";
+import { Space, Table } from "antd";
 import type { TableProps } from "antd";
 import { getReceipts } from "../../apis/ReceiptsApis";
 import moment from "moment";

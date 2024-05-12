@@ -6,7 +6,6 @@ import type {
   TableColumnsType,
   TableProps,
 } from "antd";
-import { Link, useParams } from "react-router-dom";
 import Loading from "../common/Loading";
 import { deleteProduct, getProducts } from "../../apis/ProductsApi";
 import { ShowNotification } from "../../helpers/ShowNotification";
@@ -33,8 +32,6 @@ interface DataType {
 
 type DataIndex = keyof DataType;
 const Product = () => {
-  const { id } = useParams();
-
   const [data, setData] = useState<DataType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [openOptions, setOpenOptions] = useState<boolean>(false);
@@ -59,6 +56,7 @@ const Product = () => {
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
+    console.log(searchText)
     setSearchText("");
   };
 
@@ -70,7 +68,6 @@ const Product = () => {
       selectedKeys,
       confirm,
       clearFilters,
-      close,
     }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input

@@ -1,4 +1,4 @@
-import { LoadingOutlined, Loading3QuartersOutlined } from "@ant-design/icons";
+import { Loading3QuartersOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { ShowNotification } from "../../helpers/ShowNotification";
@@ -25,10 +25,10 @@ const Loading: React.FC<LoadingType> = ({ isLoading, setIsLoading, messageTimeou
         setTimeElapsed(true);
         ShowNotification({
           message: "Cảnh báo",
-          description: messageTimeout,
+          description: messageTimeout || "",
           type: "warning",
         })
-      }, 5000);
+      }, 8000);
     }
 
     // Clean up the timer when component unmounts or when isLoading becomes false
@@ -43,7 +43,7 @@ const Loading: React.FC<LoadingType> = ({ isLoading, setIsLoading, messageTimeou
   return (
     <>
       {isLoading && (
-        <div className="absolute top-0 left-0 bottom-0 right-0 flex justify-center  bg-slate-800 opacity-50">
+        <div className="absolute top-0 left-0 bottom-0 right-0 flex justify-center  bg-slate-800 opacity-50 z-50">
           <Spin
             className="flex items-center"
             indicator={

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Button, Modal, Space, Table, Tag } from "antd";
+import { useEffect, useState } from "react";
+import { Button, Space, Table } from "antd";
 import type { TableProps } from "antd";
 import { deleteUser, getUsers } from "../../apis/UserApis";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
