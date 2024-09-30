@@ -160,7 +160,7 @@ export default function Manager() {
             />
             <div className="m-[4px] px-8 flex justify-between ">
               <div className="font-bold text-md cursor-pointer mr-4">
-                Khanh Nguyễn
+                Mạnh Tuấn
               </div>
               <div
                 className=" font-bold text-md cursor-pointer hover:text-blue-400"

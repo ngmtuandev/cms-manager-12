@@ -6,7 +6,7 @@ import path from "./utils/path";
 export default function App() {
   return (
     <Routes>
-      <Route path={path.SIGN_IN} element={<LoginPage />}></Route>
+      {/* <Route path={path.SIGN_IN} element={<LoginPage />}></Route> */}
       <Route path="/*" element={<Manager />}></Route>
     </Routes>
   );
