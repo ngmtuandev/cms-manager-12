@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Space, Table } from "antd";
 import type { TableProps } from "antd";
-import { deleteUser, getUsers } from "../../apis/UserApis";
+import { deleteUser, getAllUserApi, getUsers } from "../../apis/UserApis";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import ModalAddUser from "./ModalAddUser";
 import { ShowNotification } from "../../helpers/ShowNotification";
@@ -28,14 +28,8 @@ const User = () => {
   const columns: TableProps<DataType>["columns"] = [
     {
       title: "Tên",
-      dataIndex: "firstName",
-      key: "firstName",
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: "Họ",
-      dataIndex: "lastName",
-      key: "lastName",
+      dataIndex: "userName",
+      key: "userName",
       render: (text) => <a>{text}</a>,
     },
     {
@@ -45,8 +39,8 @@ const User = () => {
     },
     {
       title: "Số điện thoại",
-      dataIndex: "phone",
-      key: "phone",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
     },
     {
       title: "Ngày tạo",
@@ -63,22 +57,20 @@ const User = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {userRole === "ADMIN" && (
-            <>
-              <EditOutlined
-                onClick={() => {
-                  handleOpenEdit(record);
-                }}
-                className="text-xl cursor-pointer hover:text-blue-500"
-              />
-              <DeleteOutlined
-                onClick={() => {
-                  handleDelete(record.id);
-                }}
-                className="text-xl cursor-pointer hover:text-blue-500"
-              />
-            </>
-          )}
+          <>
+            <EditOutlined
+              onClick={() => {
+                handleOpenEdit(record);
+              }}
+              className="text-xl cursor-pointer hover:text-blue-500"
+            />
+            <DeleteOutlined
+              onClick={() => {
+                handleDelete(record.id);
+              }}
+              className="text-xl cursor-pointer hover:text-blue-500"
+            />
+          </>
         </Space>
       ),
     },
@@ -86,12 +78,12 @@ const User = () => {
 
   useEffect(() => {
     (async () => {
-      const response: any = await getUsers();
-      if (response) {
-        const modifiedData = response.map((item: DataType) => ({
+      const response: any = await getAllUserApi();
+      if (response?.isSuccess) {
+        const modifiedData = response?.data?.map((item: any) => ({
           ...item,
           createdAt: moment(item.createdAt).format("DD-MM-YYYY"),
-          key: item.id, // Setting the key to the id returned from the backend
+          key: item.id,
         }));
         setData(modifiedData);
       }

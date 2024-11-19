@@ -1,5 +1,5 @@
 import axiosClient from "../libs/axios-client";
-import {  SignRes } from "../types/TAuth";
+import { SignRes } from "../types/TAuth";
 
 const signIn = async (data: SignRes) => {
   try {
@@ -37,9 +37,9 @@ const deleteUser = async (id: string) => {
   }
 };
 
-const updateUser = async (id: string, data:any) => {
+const updateUser = async (id: string, data: any) => {
   try {
-    const response = await axiosClient.put(`/users/${id}`,data);
+    const response = await axiosClient.put(`/users/${id}`, data);
     return response; // Return data if needed
   } catch (error) {
     throw error; // Rethrow error or handle it accordingly
@@ -64,5 +64,22 @@ const getUsers = async () => {
   }
 };
 
-export { signIn, logout, getUsers, addUser, deleteUser, updateUser, getProfile};
-  
+const getAllUserApi = async () => {
+  try {
+    const response = await axiosClient.post("/user/find-all");
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export {
+  signIn,
+  logout,
+  getUsers,
+  addUser,
+  deleteUser,
+  updateUser,
+  getProfile,
+  getAllUserApi,
+};

@@ -45,7 +45,7 @@ export default function Manager() {
       <Layout className="min-h-lvh">
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="w-full mt-4 text-2xl font-bold text-center text-white">
-            MSC
+            ADMIN
           </div>
           <div className="demo-logo-vertical" />
           <Menu
